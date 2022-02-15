@@ -61,3 +61,19 @@ deploy:
 
 ## 5 源码git托管
 将源代码文件托管github
+
+## 6 安装github加速插件
+
+https://gitee.com/docmirror/dev-sidecar?_from=gitee_search
+
+## 7 修改主题
+
+访问butterfly安装文档 https://gitee.com/immyw/hexo-theme-butterfly?_from=gitee_search
+在博客根目录安装稳定版
+> git clone -b master https://github.com/jerryc127/hexo-theme-butterfly.git themes/butterfly
+
+修改hexo配置文件_config.yml，把主題改为Butterfly
+> theme: butterfly
+
+如果你沒有pug以及stylus的渲染器，請下载安裝：
+> npm install hexo-renderer-pug hexo-renderer-stylus --save
