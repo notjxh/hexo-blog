@@ -4,19 +4,19 @@ date: 2020-11-18 19:36:21
 tags: hexo使用
 ---
 ![1.jpg](1.jpg)
-## 1 问题
+## 问题
 
 如何在hexo插入图片
 
-## 2 解决
+## 解决
 
-### 2.1 修改配置 _config.yml
+### 修改配置 _config.yml
 > post_asset_folder: true
 
-### 2.2 安装插件
+### 安装插件
 > npm install hexo-asset-image --save
 
-### 2.3 修改插件
+### 修改插件
 找到如下文件，先备份
 > /node_modules/hexo-asset-image/index.js
 
@@ -85,14 +85,14 @@ hexo.extend.filter.register('after_post_render', function(data){
 });
 ```
 
-## 3 测试
+## 测试
 
 > hexo new post hexo中插入图片
 
 会生成一个`hexo中插入图片.md`和同名文件夹，将`1.jpg`放在同名文件夹中，在文章中按以下方式引用即可`![1.jpg](1.jpg)`
 
 ---
-## 4 参考
+## 参考
 
 https://blog.csdn.net/xjm850552586/article/details/84101345
 https://www.cnblogs.com/Jesee/archive/2004/01/13/11234387.html

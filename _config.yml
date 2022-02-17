@@ -3,12 +3,12 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: BigCat的Blog
+title: BigCat's Blog
 subtitle:
 description: 思考 记录 成长
 keywords: java
 author: BigCat
-language: en
+language: zh-CN
 timezone: ''
 
 # URL
