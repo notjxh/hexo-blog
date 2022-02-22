@@ -87,7 +87,7 @@ disable_top_img: false
 index_img:
 
 # If the banner of page not setting, it will show the top_img
-default_top_img: /img/top.jpg
+default_top_img: /img/test.jpg
 
 # The banner image of archive page
 archive_img:
@@ -175,8 +175,8 @@ toc:
   post: true
   page: false
   number: true
-  expand: false
-  style_simple: false # for post
+  expand: true
+  style_simple: true # for post
 
 post_copyright:
   enable: true
