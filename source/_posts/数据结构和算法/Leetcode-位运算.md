@@ -1,0 +1,219 @@
+---
+title: Leetcode-位运算
+date: 2022-02-23 11:13:28
+tags: Leetcode-位运算
+description:
+categories: Leetcode
+---
+## [136. 只出现一次的数字](https://leetcode-cn.com/problems/single-number/)
+
+难度简单
+
+```text
+给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现两次。找出那个只出现了一次的元素。
+
+说明：
+
+你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？
+
+示例 1:
+
+输入: [2,2,1] 输出: 1 
+
+示例 2:
+
+输入: [4,1,2,1,2] 输出: 4
+
+```
+
+
+
+```java
+class Solution {
+    public int singleNumber(int[] nums) {
+        Map<Integer,Integer> map = new HashMap<>();
+        for (int num : nums) {
+            if (map.containsKey(num)){
+                map.remove(num);
+            }else {
+                map.put(num,num);
+            }
+        }
+        int r = 0;
+        for (Integer integer : map.keySet()) {
+            r =  integer;
+        }
+        return r;
+    }
+}
+```
+
+
+
+执行用时：13 ms, 在所有 Java 提交中击败了18.66%的用户
+
+内存消耗：39.3 MB, 在所有 Java 提交中击败了6.12%的用户
+
+
+
+缺点：执行慢，代码丑陋
+
+map.keySet()用法
+
+```java
+/**
+ * @param nums
+ * @return 考虑到上种，用set 的方式
+ */
+public static int singleNumber2(int[] nums) {
+
+    Set<Integer> set = new HashSet<>();
+    for (int num : nums) {
+        if (!set.add(num)) {
+            set.remove(num);
+        }
+    }
+    return set.iterator().next();
+}
+```
+
+
+
+最终：异或
+
+执行用时：1 ms, 在所有 Java 提交中击败了100.00%的用户
+
+内存消耗：38.8 MB, 在所有 Java 提交中击败了23.45%的用户
+
+```java
+public static int singleNumber3(int[] nums) {
+
+    int result = 0;
+    for (int num : nums) {
+        result = result ^ num;
+    }
+    return result;
+}
+```
+
+
+
+关于位运算：https://www.cnblogs.com/shuaiding/p/11124974.html
+
+
+
+
+
+## [461. 汉明距离](https://leetcode-cn.com/problems/hamming-distance/)
+
+难度简单
+
+```text
+两个整数之间的汉明距离指的是这两个数字对应二进制位不同的位置的数目。
+
+给出两个整数 x 和 y，计算它们之间的汉明距离。
+
+注意：
+
+0 ≤ x, y < 231.
+
+示例:
+
+输入: x = 1, y = 4  输出: 2  解释: 1   (0 0 0 1) 4   (0 1 0 0)        ↑   ↑  上面的箭头指出了对应二进制位不同的位置。
+
+```
+
+
+
+思路;用异或计算，输出不为0的二进制个数
+
+```java
+/**
+ * @param x
+ * @param y
+ * @return 461. 汉明距离
+ */
+public int hammingDistance(int x, int y) {
+
+    Integer result = x ^ y;
+    String s = Integer.toBinaryString(result);
+    int count = 0;
+    for (char c : s.toCharArray()) {
+        if (c!='0'){
+            count++;
+        }
+    }
+    return count;
+}
+```
+
+
+
+缺点：效率太低
+
+
+
+执行用时：1 ms, 在所有 Java 提交中击败了9.62%的用户
+
+内存消耗：35.2 MB, 在所有 Java 提交中击败了65.91%的用户
+
+
+
+用以下内置**位计数功能**超过100%了~
+
+return Integer.bitCount(x ^ y); 
+
+
+
+其他解法 **布赖恩·克尼根算法 详见官方题解**
+
+
+
+## [338. 比特位计数-TODO](https://leetcode-cn.com/problems/counting-bits/)
+
+难度简单
+
+给你一个整数 `n` ，对于 `0 <= i <= n` 中的每个 `i` ，计算其二进制表示中 **1 的个数** ，返回一个长度为 `n + 1` 的数组 `ans` 作为答案。
+
+ 
+
+**示例 1：**
+
+```text
+输入：n = 2
+输出：[0,1,1]
+解释：
+0 --> 0
+1 --> 1
+2 --> 10
+```
+
+**示例 2：**
+
+```text
+输入：n = 5
+输出：[0,1,1,2,1,2]
+解释：
+0 --> 0
+1 --> 1
+2 --> 10
+3 --> 11
+4 --> 100
+5 --> 101
+```
+
+ 
+
+**提示：**
+
+- `0 <= n <= 105`
+
+ 
+
+**进阶：**
+
+- 很容易就能实现时间复杂度为 `O(n log n)` 的解决方案，你可以在线性时间复杂度 `O(n)` 内用一趟扫描解决此问题吗？
+- 你能不使用任何内置函数解决此问题吗？（如，C++ 中的 `__builtin_popcount` ）
+
+---
+

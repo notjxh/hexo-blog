@@ -1,8 +1,9 @@
 ---
 title: 搭建blog
 date: 2020-11-18 18:34:20
-tags: hexo使用
+tags: Hexo
 description: 搭建blog的流程
+categories: Hexo
 ---
 内容来自[easy hexo官网](https://easyhexo.com/1-Hexo-install-and-config/)，本文只记录主要流程
 

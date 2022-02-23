@@ -1,7 +1,8 @@
 ---
 title: hexo中插入图片
 date: 2020-11-18 19:36:21
-tags: hexo使用
+tags: Hexo
+categories: Hexo
 ---
 ![1.jpg](1.jpg)
 ## 问题
