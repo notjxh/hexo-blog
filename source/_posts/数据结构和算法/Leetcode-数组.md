@@ -7,7 +7,7 @@ categories: Leetcode
 ---
 ## [1. 两数之和](https://leetcode-cn.com/problems/two-sum/)
 难度简单
-```text
+
 给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 的那 两个 整数，并返回它们的数组下标。
 你可以假设每种输入只会对应一个答案。但是，数组中同一个元素不能使用两遍。
 你可以按任意顺序返回答案。
@@ -25,13 +25,13 @@ categories: Leetcode
 输入：nums = [3,3], target = 6
 输出：[0,1]
 
-```
-
 提示：
 2 <= nums.length <= 103
 -109 <= nums[i] <= 109
 -109 <= target <= 109
 只会存在一个有效答案
+
+---
 
 思路：
 暴力：将从头将每个值与其后的所有值一个个相加，得到target返回
@@ -70,7 +70,7 @@ public int[] twoSum2(int[] nums, int target) {
 
 ##  [53. 最大子序和](https://leetcode-cn.com/problems/maximum-subarray/)
 
-```text
+
 给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
 
 示例 1：
@@ -95,7 +95,6 @@ public int[] twoSum2(int[] nums, int target) {
 输入：nums = [-100000]
 输出：-100000
 
-```
 
  提示：
 
@@ -104,11 +103,14 @@ public int[] twoSum2(int[] nums, int target) {
 
 进阶：如果你已经实现复杂度为 O(n) 的解法，尝试使用更为精妙的 分治法 求解。
 
+---
+
 
 重点是把这道题转换成动态规划的思想来解决：
 https://leetcode-cn.com/problems/maximum-subarray/solution/xiang-xi-jie-du-dong-tai-gui-hua-de-shi-xian-yi-li/
 
-对nums[i]遍历，当遍历到第i个元素时，计算以第i个元素为结尾的子列的最大和，我们记为sumNow，我们可以知道sumNow由以第i-1个元素结尾的子列（记最大和为sumPro）和nums[i]组成，比较每一次的SumMax和sumNow
+对nums[i]遍历，当遍历到第i个元素时，计算以第i个元素为结尾的子列的最大和，我们记为sumNow，我们可以知道sumNow由以第i-1个元素结尾的子列
+（记最大和为sumPro）和nums[i]组成，比较每一次的SumMax和sumNow
 
 
 最大和连续子列一定是以某个节点为结束点的连续子列
@@ -132,22 +134,17 @@ public int maxSubArray(int[] nums) {
 ```
 
 
-
-
 还有一种 todo分治法：
-
 
 
 ## [121. 买卖股票的最佳时机](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
 
-```text
+
 给定一个数组 prices ，它的第 i 个元素 prices[i] 表示一支给定股票第 i 天的价格。
 
 你只能选择 某一天 买入这只股票，并选择在 未来的某一个不同的日子 卖出该股票。设计一个算法来计算你所能获取的最大利润。
 
 返回你可以从这笔交易中获取的最大利润。如果你不能获取任何利润，返回 0 。
-
- 
 
 示例 1：
 
@@ -161,15 +158,12 @@ public int maxSubArray(int[] nums) {
 输出：0
 解释：在这种情况下, 没有交易完成, 所以最大利润为 0。
 
-```
-
-
 提示：
 
 1 <= prices.length <= 105
 0 <= prices[i] <= 104
 
-
+---
 
 思路：
 第i天的最大利润=第i天的价格-前i-1天的最低价格
@@ -199,7 +193,6 @@ public int maxSubArray(int[] nums) {
 }
 ```
 
-
 执行用时：2 ms, 在所有 Java 提交中击败了85.02%的用户
 内存消耗：51.4 MB, 在所有 Java 提交中击败了42.22%的用户
 
@@ -222,8 +215,6 @@ public static int maxProfit2(int[] prices){
 }
 ```
 
-
-
 定义数组可以不初始化，可以赋值为null
 
 
@@ -232,12 +223,10 @@ public static int maxProfit2(int[] prices){
 
 难度简单
 
-```
+
 给定一个大小为 n 的数组，找到其中的多数元素。多数元素是指在数组中出现次数 大于 ⌊ n/2 ⌋ 的元素。
 
 你可以假设数组是非空的，并且给定的数组总是存在多数元素。
-
- 
 
 示例 1：
 
@@ -247,13 +236,11 @@ public static int maxProfit2(int[] prices){
 
 输入：[2,2,1,1,1,2,2] 输出：2 
 
-```
-
 **进阶：**
 
 - 尝试设计时间复杂度为 O(n)、空间复杂度为 O(1) 的算法解决此问题。
 
-
+---
 
 思路：
 
@@ -261,8 +248,8 @@ public static int maxProfit2(int[] prices){
 
 形象解释：
 
-诸侯乱战，其中有一方诸侯A的人数超过总人数的一半，这样不是相同一方的1v1抵消，则最后剩下的一定是人数最多的那一方诸侯，最差的是所有其他诸侯联合打A，但是还是A会赢
-
+诸侯乱战，其中有一方诸侯A的人数超过总人数的一半，这样不是相同一方的1v1抵消，则最后剩下的一定是人数最多的那一方诸侯，最差的是所有其他诸侯联合打A，
+但是还是A会赢
 
 
 ```java
@@ -299,7 +286,7 @@ public static int majorityElement(int[] nums) {
 
 难度简单
 
-```
+
 给定一个数组 nums，编写一个函数将所有 0 移动到数组的末尾，同时保持非零元素的相对顺序。
 
 示例:
@@ -311,11 +298,7 @@ public static int majorityElement(int[] nums) {
 1. 必须在原数组上操作，不能拷贝额外的数组。
 2. 尽量减少操作次数。
 
-
-
-```
-
-
+---
 
 思路：
 
@@ -361,14 +344,11 @@ public static void moveZeroes2(int[] nums) {
 ```
 
 
-
-
-
 ## [448. 找到所有数组中消失的数字](https://leetcode-cn.com/problems/find-all-numbers-disappeared-in-an-array/)
 
 难度简单
 
-```
+
 给定一个范围在  1 ≤ a[i] ≤ n ( n = 数组大小 ) 的 整型数组，数组中的元素一些出现了两次，另一些只出现一次。
 
 找到所有在 [1, n] 范围之间没有出现在数组中的数字。
@@ -379,9 +359,7 @@ public static void moveZeroes2(int[] nums) {
 
 输入: [4,3,2,7,8,2,3,1]  输出: [5,6] 
 
-```
-
-
+`---
 
 思路：如果将[1,n]带入数组验证是否存在，则时间复杂度是n²，显然不行
 
@@ -417,13 +395,9 @@ public static List<Integer> findDisappearedNumbers(int[] nums) {
 ```
 
 
-
-有点慢：
-
 执行用时：6 ms, 在所有 Java 提交中击败了61.30%的用户
 
 内存消耗：47.3 MB, 在所有 Java 提交中击败了69.66%的用户
-
 
 
 或者可以将对应的位置加上n，之后比较是否大于n，不大于的表示当前位置没有被加过，所以对应的i就是没有
