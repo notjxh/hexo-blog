@@ -66,19 +66,11 @@ categories: Leetcode
 
 ---
 
-思路：
-
-1.怎么用java表示链表？**ListDemo**
-
-https://blog.csdn.net/weixin_36605200/article/details/88804537
-
-引申 访问修饰符https://blog.csdn.net/qq_43166888/article/details/103339537
-
-2.分别遍历两个链表的值，记录
 
 
+分别遍历两个链表的值，记录
 
-题解：迭代法：注意随意定义一个头结点，用头结点的下一个节点开始
+迭代法：注意随意定义一个头结点，用头结点的下一个节点开始
 
 ```java
 public ListNode mergeTwoLists3(ListNode l1, ListNode l2) {
@@ -377,6 +369,57 @@ while (preA!=preB){
 return preA;
 ```
 
+##  [203. 移除链表元素](https://leetcode-cn.com/problems/remove-linked-list-elements/)
+
+难度简单
+
+给你一个链表的头节点        
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/03/06/removelinked-list.jpg)
+
+```
+输入：head = [1,2,6,3,4,5,6], val = 6
+输出：[1,2,3,4,5]
+```
+
+**示例 2：**
+
+```
+输入：head = [], val = 1
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：head = [7,7,7,7], val = 7
+输出：[]
+```
+
+ 
+
+**提示：**
+
+- 列表中的节点数目在范围 `[0, 104]` 内
+- `1 <= Node.val <= 50`
+- `0 <= val <= 50`
+
+---
+
+```
+    public ListNode removeElements(ListNode head, int val) {
+       if(head==null){
+           return head;
+       }
+       head.next = removeElements(head.next,val);
+       return head.val==val?head.next:head;
+    }
+```
+
 
 
 
@@ -429,43 +472,43 @@ return preA;
 
 ---
 
+
+
 迭代法：注意这里需要三个指针，temp  作为临时指针
 
 ```java
 public ListNode reverseList(ListNode head) {
-        if (head==null){
-            return null;
+        
+        ListNode pre = null;
+        ListNode cur = head;
+        while (cur!=null){
+            ListNode next  = cur.next;
+            cur.next = pre;
+            pre = cur;
+            cur = next;
         }
-        // 这里将当前节点定义为head，再定义一个前节点更好prev=null;
-        ListNode curr = head;
-        ListNode next = curr.next;
-        head.next=null;
-        while (next!=null){
-            ListNode temp  = next.next;
-            next.next = curr;
-            curr = next;
-            next = temp;
-        }
-        return curr;
+        return cur;
     }
 ```
 
 
 
+递归法TODO：继续理解
 
+head.next.next = head;将head的下一个节点的的下一个节点指向自己
 
-题解递归法todo：
+将head的指向清空
 
 ```java
-public ListNode reverseList(ListNode head) {
-    if (head == null || head.next == null) {
-        return head;
+    public ListNode reverseList(ListNode head) {
+        if(head==null || head.next==null){
+            return head;
+        }
+        ListNode newHead = reverseList(head.next);
+        head.next.next = head;
+        head.next = null;
+        return newHead;
     }
-    ListNode p = reverseList(head.next);
-    head.next.next = head;
-    head.next = null;
-    return p;
-}
 
 ```
 
@@ -518,7 +561,7 @@ public ListNode reverseList(ListNode head) {
 
 思路：什么是回文链表
 
-类比字符串：回文字符串是指从字符串中间开始，两遍的字符相对于比如abba aca
+类比字符串：回文字符串是指从字符串中间开始，两边的字符相对称，比如abba和aca
 
 问题是链表是单链表，只能从头开始遍历
 
