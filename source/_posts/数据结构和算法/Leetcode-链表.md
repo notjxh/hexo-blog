@@ -5,6 +5,26 @@ tags: Leetcode-链表
 description:
 categories: Leetcode
 ---
+
+```java
+    class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode() {
+        }
+
+        ListNode(int val) {
+            this.val = val;
+        }
+
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
+    }
+```
+
 ##  [21. 合并两个有序链表](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
 
 难度简单
@@ -639,26 +659,19 @@ public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 
 ![img](https://assets.leetcode.com/uploads/2020/10/03/remove_ex1.jpg)
 
-```text
 输入：head = [1,2,3,4,5], n = 2
 输出：[1,2,3,5]
-```
 
 **示例 2：**
 
-```text
 输入：head = [1], n = 1
 输出：[]
-```
+
 
 **示例 3：**
 
-```text
 输入：head = [1,2], n = 1
 输出：[1]
-```
-
- 
 
 **提示：**
 
@@ -667,13 +680,14 @@ public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 - `0 <= Node.val <= 100`
 - `1 <= n <= sz`
 
- 
 
 **进阶：**你能尝试使用一趟扫描实现吗？
 
 ---
 
-思路：链表只能从头到尾扫描，一次扫描要找到倒数第n位，单指针肯定不行
+思路：
+第一遍扫描出链表的长度sz，第二遍扫描第sz-n+1个结点，就是倒数第n个结点
+进阶：一次扫描要找到倒数第n个节点，需要用到快慢`双指针`
 
 ```java
     public ListNode removeNthFromEnd(ListNode head, int n) {
@@ -688,6 +702,7 @@ public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
             slow = slow.next;
         }
         slow.next = slow.next.next;
+        // 考虑到只有一个元素的情况下 head可能会被移除
         return pre.next;
     }
 ```
