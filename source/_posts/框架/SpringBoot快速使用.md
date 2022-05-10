@@ -130,77 +130,95 @@ public interface OperationMapper extends BaseMapper<Operation> {
    }
    ```
 
-5. 通过generator工具批量生成Entity类和Mapper接口
-
-   增加依赖，@RequestMapping需要spring-boot-starter-web
+5. 配置xml文件
 
    ```
-           <dependency>
-               <groupId>com.baomidou</groupId>
-               <artifactId>mybatis-plus-generator</artifactId>
-               <version>3.5.2</version>
-           </dependency>
-           <dependency>
-               <groupId>org.apache.velocity</groupId>
-               <artifactId>velocity</artifactId>
-               <version>1.7</version>
-           </dependency>
-           <dependency>
-               <groupId>org.springframework.boot</groupId>
-               <artifactId>spring-boot-starter-web</artifactId>
-           </dependency>
+   mybatis-plus:
+     mapper-locations:
+       - classpath:xml/*.xml
    ```
 
-   
+6. 通过generator工具批量生成Entity类和Mapper接口
 
-   运行Generator
+* 增加依赖，@RequestMapping需要spring-boot-starter-web
 
-   ```
-   public class FastAutoGenerator {
-   
-       /**
-        * 执行初始化数据库脚本
-        */
-       public static void before() throws SQLException {
-           Connection conn = DATA_SOURCE_CONFIG.build().getConn();
-   //        InputStream inputStream = H2CodeGeneratorTest.class.getResourceAsStream("/sql/init.sql");
-           ScriptRunner scriptRunner = new ScriptRunner(conn);
-           scriptRunner.setAutoCommit(true);
-   //        scriptRunner.runScript(new InputStreamReader(inputStream));
-           conn.close();
-       }
-   
-       /**
-        * 数据源配置
-        */
-       private static final DataSourceConfig.Builder DATA_SOURCE_CONFIG = new DataSourceConfig
-               .Builder("jdbc:mysql://IP:3306/DATABASE?characterEncoding=utf-8", "root", "PASSWORD");
-   
-       /**
-        * 执行 run
-        */
-       public static void main(String[] args) throws SQLException {
-   //        before();
-           FastAutoGenerator.create(DATA_SOURCE_CONFIG)
-                   // 全局配置
-                   .globalConfig((scanner, builder) -> builder.author(scanner.apply("请输入作者名称")))
-                   // 包配置
-                   .packageConfig((scanner, builder) -> builder.parent(scanner.apply("请输入包名")))
-                   // 策略配置
-                   .strategyConfig((scanner, builder) -> builder.addInclude(scanner.apply("请输入表名，多个表名用,隔开")).entityBuilder().enableLombok())
-                   /*
-                       模板引擎配置，默认 Velocity 可选模板引擎 Beetl 或 Freemarker
-                      .templateEngine(new BeetlTemplateEngine())
-                      .templateEngine(new FreemarkerTemplateEngine())
-                    */
-                   .execute();
-       }
-   }
-   ```
+```
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-generator</artifactId>
+            <version>3.5.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.velocity</groupId>
+            <artifactId>velocity</artifactId>
+            <version>1.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+```
 
-   
+
+
+* 运行Generator
+
+```
+public class FastAutoGenerator {
+
+    /**
+     * 执行初始化数据库脚本
+     */
+    public static void before() throws SQLException {
+        Connection conn = DATA_SOURCE_CONFIG.build().getConn();
+//        InputStream inputStream = H2CodeGeneratorTest.class.getResourceAsStream("/sql/init.sql");
+        ScriptRunner scriptRunner = new ScriptRunner(conn);
+        scriptRunner.setAutoCommit(true);
+//        scriptRunner.runScript(new InputStreamReader(inputStream));
+        conn.close();
+    }
+
+    /**
+     * 数据源配置
+     */
+    private static final DataSourceConfig.Builder DATA_SOURCE_CONFIG = new DataSourceConfig
+            .Builder("jdbc:mysql://IP:3306/DATABASE?characterEncoding=utf-8", "root", "PASSWORD");
+
+    /**
+     * 执行 run
+     */
+    public static void main(String[] args) throws SQLException {
+//        before();
+        FastAutoGenerator.create(DATA_SOURCE_CONFIG)
+                // 全局配置
+                .globalConfig((scanner, builder) -> builder.author(scanner.apply("请输入作者名称")))
+                // 包配置
+                .packageConfig((scanner, builder) -> builder.parent(scanner.apply("请输入包名")))
+                // 策略配置
+                .strategyConfig((scanner, builder) -> builder.addInclude(scanner.apply("请输入表名，多个表名用,隔开")).entityBuilder().enableLombok())
+                /*
+                    模板引擎配置，默认 Velocity 可选模板引擎 Beetl 或 Freemarker
+                   .templateEngine(new BeetlTemplateEngine())
+                   .templateEngine(new FreemarkerTemplateEngine())
+                 */
+                .execute();
+    }
+}
+```
+
+
+
+
+
+@SpringBootApplication做了哪些事
 
 @Controller和@RestController
+
+参数的 多重传递方式
+
+日期参数，统一处理
+
+
 
 
 
