@@ -6,9 +6,9 @@ description:
 categories:
 ---
 
-## 什么是
+## 什么是JVM
 
-定义：Java Virtual Machine-java字节码的运行环境
+定义：Java Virtual Machine：java字节码的运行环境
 
 好处：
 
@@ -29,13 +29,21 @@ categories:
 
 
 
-jvm内存结构-gc垃圾回收-字节码文件-类加载器-执行引擎
+jvm内存结构
+
+gc垃圾回收
+
+字节码文件
+
+类加载器
+
+执行引擎
 
 
 
 ## 内存结构
 
-### 1.程序计数器
+### 程序计数器
 
 #### 定义
 
@@ -51,9 +59,9 @@ java源代码-编译成二进制字节码（jvm指令，每个系统都一样）
 
 线程私有的:每个线程都有自己的自己的程序计数器
 
-jvm中唯一不存在内存溢出
+PCR是jvm中唯一不存在内存溢出的(jvm规范规定)
 
-### 2.虚拟机栈
+### 虚拟机栈
 
 #### 定义
 
@@ -61,16 +69,22 @@ JVM Stacks :java 虚拟机栈
 
 * 每个线程 运行时需要的内存，称为虚拟机栈
 
-* 每个栈由多个栈帧（Frame)组成，对应着每次方法调用时所占用的内存
+* 每个栈由多个栈帧（Frame)组成，对应着每次方法调用时所占用的内存（参数、局部变量、返回地址）
 * 每个线程只能有一个活动栈帧，对应着当前正在执行的的那个方法
 
+#### 代码演示
+
+idea中的frams内看到当前线程中的栈，其中最上面的就是活动栈帧
+
+![2_1.png](2_1.png)
 
 
-### 3.本地方法栈
+
+### 本地方法栈
 
 带有native关键字的方法，如Object类里的hashCode()、clone()、notify()、wait()，通过c、c++等语言调用底层系统。
 
-### 4.堆
+### 堆
 
 #### 定义
 
@@ -106,7 +120,7 @@ Heap 堆：通过new 关键字，创建的对象都会使用堆内存
 
 > 25次后报错：java.lang.OutOfMemoryError: Java heap space
 
-设置堆内存大小 `-Xmx10m`
+设置堆内存大小 `-Xmx10m` `-Xmx2g`
 
 #### 堆内存诊断
 
@@ -149,11 +163,11 @@ Heap 堆：通过new 关键字，创建的对象都会使用堆内存
 
 
 
-### 5.方法区
+### 方法区
 
 #### 定义
 
-[定义](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.4)
+[官方定义](https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-2.html#jvms-2.5.4)
 
 
 
@@ -171,7 +185,7 @@ jdk1.8以后实现的方式叫元空间，放在本地内存。
 
 
 
-#### 内存溢出
+#### 方法区内存溢出
 
 演示：
 
@@ -208,11 +222,11 @@ public class MethodAreaDemo extends ClassLoader {
 
 设置方法区大小：
 
--XX:MaxMetaspaceSize=8m时：
+`-XX:MaxMetaspaceSize=8m`时：
 
 报错：MaxMetaspaceSize is too small.
 
--XX:MaxMetaspaceSize=10m时：
+`-XX:MaxMetaspaceSize=10m`时：
 
 报错：Exception in thread "main" java.lang.OutOfMemoryError: Compressed class space
 

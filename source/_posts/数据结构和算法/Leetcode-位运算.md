@@ -169,7 +169,7 @@ return Integer.bitCount(x ^ y);
 
 
 
-## [338. 比特位计数-TODO](https://leetcode-cn.com/problems/counting-bits/)
+## [338. 比特位计数](https://leetcode-cn.com/problems/counting-bits/)
 
 难度简单
 
@@ -217,3 +217,38 @@ return Integer.bitCount(x ^ y);
 
 ---
 
+思路：无，看题解，有个思路如下：
+
+> 所有的数只能是偶数或者奇数
+
+偶数x：最后一位一定是0，含1量==x/2的；相当于x`右移`一位等到x/2
+
+如 1（1） 2（10）  4（100） 3（11) 6(110)
+
+奇数y：相当于前一位偶数的最后一位变成了1，含1量==前一个奇数的+1
+
+如 1（1） 2（10）  3（11）  4（100）5（101）
+
+故可以通过动态规划来解决：
+
+```
+class Solution {
+    public int[] countBits(int n) {
+        int[] result = new int[n+1];
+        result[0]=0;
+        for (int i = 1;i<=n;i++){
+            //奇数
+            if (i%2!=0){
+                result[i]= result[i-1]+1;
+            }else {
+                result[i]= result[i/2];
+            }
+        }
+        return result;
+    }
+}
+```
+
+执行用时：1 ms, 在所有 Java 提交中击败了99.97%的用户
+
+内存消耗：45.5 MB, 在所有 Java 提交中击败了44.92%的用户
