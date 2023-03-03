@@ -25,7 +25,6 @@ https://www.cnblogs.com/specter45/p/github.html
 >     git add readme.txt  //添加到git仓库
 >     git commit -m "提交readme.txt" //提交到git仓库
 
-
 ---
 
 ## 时光机穿梭
@@ -287,4 +286,36 @@ master分支稳定用来发布版本，在dev上开发
 `git merge --no-ff -m "merge with no-ff" dev`   
 不使用fast-forward 方式合并，可看到合并历史
 
+
+
+## 遇到的问题
+#### 1
+
+本地从master新建dev分支，会从master拷贝文件到dev
+
+dev分支下update，报错如下，因为远程仓库还没有dev
+
+```
+No tracked branch configured for branch dev or the branch doesn't exist.
+To make your branch track a remote branch call, for example,
+git branch --set-upstream-to=origin/dev dev
+```
+
+使用 git push --set-upstream origin dev
+
+#### 2
+
+1.gitlab新建项目，clone到本地，将文件拷贝到clone文件夹
+
+2.update时报错;原因是远程库上初始没有文件！！
+
+#### 3
+
+在分支dev-2 改了东西
+
+然后check out 到新的分支dev-3 提交
+
+远程库自动生成 dev-3分支
+
+且修改自动到dev-3中，dev-2没有变化
 
