@@ -348,3 +348,267 @@ TODO 可以为任何一个类添加finalize方法。finalize方法将在垃圾�
 ## 4.7-4.10省略
 
 # 第5章 继承
+
+继承（inheritance）。利用继承，人们可以基于已存在的类构造一个新类。
+
+反射（reflection）的概念。反射是指在程序运行期间发现更多的类及其属性的能力。
+
+## 5.1 类、超类和子类
+
+### 5.1.1 定义子类
+关键字extends表示继承。
+
+
+```
+public class Manager extends Employee {
+    private double bonus;
+
+    public Manager(String name,double salary ,int year,int month,int day) {
+        // 必须放在第一行
+        super(name,salary,year,month,day);
+        bonus = 0;
+    }
+
+    public double getBouns() {
+        return bonus;
+    }
+
+    public void setBouns(double bonus) {
+        this.bonus = bonus;
+    }
+
+}
+```
+
+已存在的类称为超类（superclass）、基类（base class）或父类（parent class）；新类称为子类（subclass）、派生类（derived class）或孩子类（child class）。
+
+### 5.1.2 覆盖方法
+当父类中的方法对子类不适用，比如Manager的薪水应该是salary+bonus，因此manager需要覆盖父类中的getSalary();但是不能直接获取父类中的salary私有域，这时候可以通过==super关键词==调用父类中的共有方法获取父类中的私有域，如下：
+```
+    @Override
+    public double getSalary() {
+        //return salary+bonus;not work
+        //return getSalary()+bonus; 无线循环
+        //通过super关键词指定父类的公有方法获取父类的私有域
+        return super.getSalary()+bonus;
+    }
+```
+### 5.1.3 子类构造器
+
+由于Manager类的构造器不能访问Employee类的私有域，所以必须利用Employee类的构造器对这部分私有域进行初始化，我们可以通过super实现对超类构造器的调用。使用super调用构造器的语句必须是子类构造器的第一条语句。
+如果子类的构造器没有显式地调用超类的构造器，则将自动地调用超类默认（没有参数）的构造器。如果超类没有不带参数的构造器，并且在子类的构造器中又没有显式地调用超类的其他构造器，则Java编译器将报告错误。
+
+**关键字this**有两个用途：一是引用隐式参数，二是调用该类其他的构造器。
+同样，super关键字也有两个用途：一是调用超类的方法，二是调用超类的构造器。
+
+```
+public class ManagerTest {
+    public static void main(String[] args) {
+        Employee[] employees = new Employee[3];
+
+        Manager boss = new Manager("jack",10000,1990,1,1);
+        boss.setBonus(5000);
+        Employee employee1 = new Employee("employee1",8000,1990,1,1);
+        Employee employee2 = new Employee("employee2",8000,1990,1,1);
+        employees[0]=boss;
+        employees[1]=employee1;
+        employees[2]=employee2;
+        for (Employee employee : employees) {
+            System.out.println(employee.getSalary());
+        }
+    }
+}
+```
+一个对象变量（例如，变量e）可以指示多种实际类型的现象被称为多态（polymorphism）。在运行时能够自动地选择调用哪个方法的现象称为动态绑定（dynamic binding）。
+
+### 5.1.4 继承层次
+继承并不仅限于一个层次。例如，可以由Manager类派生Executive类。由一个公共超类派生出来的所有类的集合被称为继承层次（inheritance hierarchy）。
+在继承层次中，从某个特定的类到其祖先的路径被称为该类的继承链（inheritance chain）。
+
+### 5.1.5 多态
+
+对象变量是多态的。一个Employee变量既可以引用一个Employee类对象，也可以引用一个Employee类的任何一个子类的对象
+
+
+### 5.1.6 理解方法调用
+TODO看书
+重载解析（overloading resolution）  
+静态绑定（static binding） 动态绑定  
+方法表（method table）  
+
+### 5.1.7 阻止继承：final类和方法
+
+不允许扩展的类被称为final类。如果在定义类的时候使用了final修饰符就表明这个类是final类
+类中的特定方法也可以被声明为final。如果这样做，子类就不能覆盖这个方法（final类中的所有方法自动地成为final方法）。
+
+域也可以被声明为final。对于final域来说，构造对象之后就不允许改变它们的值了。不过，如果将一个类声明为final，只有其中的方法自动地成为final，而不包括域。
+
+
+### 5.1.8 强制类型转换
+将一个子类的引用赋给一个超类变量，编译器是允许的。但将一个超类的引用赋给一个子类变量，必须进行类型转换
+
+instanceof操作符：if(staff[1] instanceof Manager){boss = (Manager)staff[1]}
+
+### 5.1.9 抽象类
+
+使用abstract关键字,定义一个方法，表示子类来实现，这样就完全不需要实现这个方法了。
+
+为了提高程序的清晰度，包含一个或多个抽象方法的类本身必须被声明为抽象的。
+
+除了抽象方法之外，抽象类还可以包含具体数据和具体方法。
+
+类即使不含抽象方法，也可以将类声明为抽象类。抽象类不能被实例化。也就是说，如果将一个类声明为abstract，就不能创建这个类的对象。
+
+可以定义一个抽象类的对象变量，但是它只能引用非抽象子类的对象。
+
+### 5.1.10 受保护访问
+人们希望超类中的某些方法允许被子类访问，或允许子类的方法访问超类的某个域。为此，需要将这些方法或域声明为protected。
+下面归纳一下Java用于控制可见性的4个访问修饰符：
+1. 仅对本类可见——private。
+2. 对所有类可见——public。
+3. 对本包和所有子类可见——protected。
+4. 对本包可见——默认（很遗憾），不需要修饰符。
+
+## 5.2 Object：所有类的超类
+
+只有基本类型（primitive types）不是对象，例如，数值、字符和布尔类型的值都不是对象。
+
+### 5.2.1 equals方法
+
+```
+    public boolean equals(Object var1) {
+        return this == var1;
+    }
+```
+
+Object类中的equals方法用于检测一个对象是否等于另外一个对象。在Object类中，这个方法将判断两个对象是否具有相同的引用。如果两个对象具有相同的引用，它们一定是相等的。
+
+然而在很多类中，这么比较是没有意义的，比如在Employee类中，如果两个雇员的名字、薪水和雇佣日期一样，就认为他们是相等的（实际应该比较id），所以在Employee类中要覆写equals方法：
+```
+    @Override
+    public boolean equals(Object otherObject) {
+
+        if (this == otherObject) {
+            return true;
+        }
+        if (otherObject == null) {
+            return false;
+        }
+        if (getClass() != otherObject.getClass()) {
+            return false;
+        }
+        Employee other = (Employee) otherObject;
+
+        return Objects.equals(this.name, other.name) && Objects.equals(this.hireDate, other.hireDate) && salary == other.salary;
+    }
+```
+在子类中定义equals方法时，首先调用超类的equals。如果检测失败，对象就不可能相等。如果超类中的域都相等，就需要比较子类中的实例域。
+```
+public class Manager extends Employee {
+    @Override
+    //使用@Override的好处：可以避免类型错误 ，如将Object 改为Employee时会报错
+    public boolean equals(Object otherObject) {
+        if (!super.equals(otherObject)) {
+            return false;
+        }
+        Manager other = (Manager) otherObject;
+        return bonus == other.bonus;
+    }
+}
+```
+
+### 5.2.2 相等测试与继承
+对于数组类型的域，可以使用静态的Arrays.equals方法检测相应的数组元素是否相等。
+
+### 5.2.3 hashCode方法
+
+散列码（hash code）是由对象导出的一个整型值。散列码是没有规律的。
+如果x和y是两个不同的对象，x.hashCode( )与y.hashCode( )**基本上**不会相同。
+如果x和y是相同的对象，那它们的hashcode一定相同。
+
+```
+    @Override
+    public int hashCode(){
+        return Objects.hash(name,hireDate,salary);
+
+    }
+```
+如果存在数组类型的域，那么可以使用静态的Arrays.hashCode方法计算一个散列码，这个散列码由数组元素的散列码组成。
+实际上，Objects.hash(Object...obj)也是调用的Arrays.hashCode
+
+
+
+
+为什么重写equals()方法后就一定得重写hashcode()方法：
+hashCode()方法的定义就是：equals方法认定的两个相同的对象，一定得有相同的hashCode
+
+https://zhuanlan.zhihu.com/p/50206657
+
+
+## 5.3 泛型数组列表ArrayList
+
+一旦确定了数组的大小，改变它就不太容易了。在Java中，解决这个问题最简单的方法是使用Java中另外一个被称为ArrayList的类。它使用起来有点像数组，但在添加或删除元素时，具有自动调节数组容量的功能，而不需要为此编写任何代码。
+
+ArrayList是一个采用类型参数（type parameter）的泛型类（generic class）。
+为了指定数组列表保存的元素对象类型，需要用一对尖括号将类名括起来加在后面，例如，ArrayList<Employee> staff = new ArrayList<>(100)。
+
+数组列表管理着对象引用的一个内部数组。最终，数组的全部空间有可能被用尽。如果调用add且内部数组已经满了，数组列表就将自动地创建一个更大的数组，并将所有的对象从较小的数组中拷贝到较大的数组中。
+
+如果已经清楚或能够估计出数组可能存储的元素数量，就可以在填充数组之前调用
+> ensureCapacity:staff.ensureCapacity(100);
+
+一旦能够确认数组列表的大小不再发生变化，就可以调用trimToSize方法。这个方法将存储区域的大小调整为当前元素数量所需要的存储空间数目。垃圾回收器将回收多余的存储空间。
+
+## 5.4 对象包装器与自动装箱
+
+有时，需要将int这样的基本类型转换为对象。所有的基本类型都有一个与之对应的类。例如，Integer类对应基本类型int。通常，这些类称为包装器（wrapper）。这些对象包装器类拥有很明显的名字：Integer、Long、Float、Double、Short、Byte、Character、Void和Boolean（前6个类派生于公共的超类Number）。对象包装器类是不可变的，即一旦构造了包装器，就不允许更改包装在其中的值。同时，对象包装器类还是final，因此不能定义它们的子类。
+
+
+
+假设想定义一个整型数组列表。而尖括号中的类型参数不允许是基本类型，也就是说，不允许写成ArrayList<int>。这里就用到了Integer对象包装器类。我们可以声明一个Integer对象的数组列表。
+
+> ArrayList<Integer> list = new ArrayList<>();
+
+调用list.add(3)自动变成list.add(Integer.valueOf(3));这种变换被称为自动装箱（autoboxing）。
+
+当将一个Integer对象赋给一个int值时，将会自动地拆箱: int n = list.get(i);int n = list.get(i).intValue;
+
+
+
+注意：TODO 比较基本类型时使用==，比较包装器类型时，使用equals方法：
+
+自动装箱规范要求boolean、byte、char≤127，介于-128～127之间的short和int被包装到固定的对象中。
+
+如果在一个条件表达式中混合使用Integer和Double类型，Integer值就会拆箱，提升为double，再装箱为Double
+
+
+
+装箱和拆箱是编译器认可的，而不是虚拟机。编译器在生成类的字节码时，插入必要的方法调用。虚拟机只是执行这些字节码
+
+TODO 由于Java方法都是值传递
+
+
+
+## 5.5 参数数量可变的方法
+
+如printf方法：
+
+```
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                System.out.printf("%6d--%6s",i*20+j+1,"sss"+i);
+            }
+            System.out.println();
+        }
+```
+
+格式字符串%6d :右对齐6位整数
+
+## 5.6 枚举类todo
+## 5.7反射 todo
+
+
+
+
+
+

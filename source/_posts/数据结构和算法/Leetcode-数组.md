@@ -11,7 +11,7 @@ categories: Leetcode
 给定一个整数数组 nums 和一个整数目标值 target，请你在该数组中找出 和为目标值 的那 两个 整数，并返回它们的数组下标。
 你可以假设每种输入只会对应一个答案。但是，数组中同一个元素不能使用两遍。
 你可以按任意顺序返回答案。
- 
+
 示例 1：
 输入：nums = [2,7,11,15], target = 9
 输出：[0,1]
@@ -103,17 +103,9 @@ public int[] twoSum2(int[] nums, int target) {
 
 进阶：如果你已经实现复杂度为 O(n) 的解法，尝试使用更为精妙的 分治法 求解。
 
----
 
 
-重点是把这道题转换成动态规划的思想来解决：
-https://leetcode-cn.com/problems/maximum-subarray/solution/xiang-xi-jie-du-dong-tai-gui-hua-de-shi-xian-yi-li/
-
-对nums[i]遍历，当遍历到第i个元素时，计算以第i个元素为结尾的子列的最大和，我们记为sumNow，我们可以知道sumNow由以第i-1个元素结尾的子列
-（记最大和为sumPro）和nums[i]组成，比较每一次的SumMax和sumNow
-
-
-最大和连续子列一定是以某个节点为结束点的连续子列
+最大和连续子列一定是以某个节点为`结尾`的连续子列
 我们遍历出以所有节点为结束点的连续子列，计算出他们的最大和，比较取出最大值
 要求以第i个元素为结束点的子列的最大和，只需要比较以第i-1个元素的结束点的最大子列
 
@@ -126,7 +118,7 @@ public int maxSubArray(int[] nums) {
     //maxSum表示以所有节点为结束节点的最大和中的最大值
     int maxSum =nums[0];
     for (int num : nums) {
-        preSum = Math.max(preSum,preSum+num);
+        preSum = Math.max(num,preSum+num);
         maxSum = Math.max(maxSum,preSum);
     }
     return maxSum;
@@ -419,4 +411,239 @@ public static List<Integer> findDisappearedNumbers2(int[] nums) {
     return list;
 }
 ```
+
+
+
+
+
+## [128. 最长连续序列](https://leetcode.cn/problems/longest-consecutive-sequence/?envType=study-plan-v2&id=top-100-liked)
+中等
+
+给定一个未排序的整数数组 `nums` ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
+
+请你设计并实现时间复杂度为 `O(n)` 的算法解决此问题。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [100,4,200,1,3,2]
+输出：4
+解释：最长数字连续序列是 [1, 2, 3, 4]。它的长度为 4。
+```
+
+**示例 2：**
+
+```
+输入：nums = [0,3,7,2,5,8,4,6,0,1]
+输出：9
+```
+
+ 
+
+**提示：**
+
+- `0 <= nums.length <= 105`
+- `-109 <= nums[i] <= 109`
+
+```java
+    /**
+     * @param nums
+     * @return 128. 最长连续序列
+     * 思路:要求O(n)的时间复杂度，那么必须每个数字只处理一次
+     * 对于最长的序列 n , n+1 , n+2 ...,数组中必然不存在n-1
+     * 对于当前的数 n, 如果存在n-1 ，则跳过不处理，
+     * 如果不存在n-1 ,则 从n+1 开始取到最大的，就是当前的最长子列
+     * 9,1,4,7,3,-1,0,5,8,-1,6
+     */
+    public static int longestConsecutive(int[] nums) {
+        int longest = 0;
+
+        HashSet<Integer> numsSet = new HashSet<>();
+        for (int num : nums) {
+            numsSet.add(num);
+        }
+
+        for (int i : numsSet) {
+            int currentNum = i;
+            if (!numsSet.contains(currentNum - 1)) {
+                int currentLength = 1;
+                while (numsSet.contains(currentNum + 1)) {
+                    currentLength++;
+                    currentNum++;
+                }
+                longest = Math.max(longest, currentLength);
+            }
+        }
+        return longest;
+    }
+```
+
+
+
+
+## [49. 字母异位词分组](https://leetcode.cn/problems/group-anagrams/?envType=study-plan-v2&id=top-100-liked)
+
+中等
+
+给你一个字符串数组，请你将 **字母异位词** 组合在一起。可以按任意顺序返回结果列表。
+
+**字母异位词** 是由重新排列源单词的字母得到的一个新单词，所有源单词中的字母通常恰好只用一次。
+
+ 
+
+**示例 1:**
+
+```
+输入: strs = ["eat", "tea", "tan", "ate", "nat", "bat"]
+输出: [["bat"],["nat","tan"],["ate","eat","tea"]]
+```
+
+**示例 2:**
+
+```
+输入: strs = [""]
+输出: [[""]]
+```
+
+**示例 3:**
+
+```
+输入: strs = ["a"]
+输出: [["a"]]
+```
+
+ 
+
+**提示：**
+
+- `1 <= strs.length <= 104`
+- `0 <= strs[i].length <= 100`
+- `strs[i]` 仅包含小写字母
+
+```java
+
+    /**
+     * @param strs
+     * @return 49. 字母异位词分组
+     * 思路： 创建一个HashMap<String ,List<String>
+     * 将每个strs排序后作为key，strs作为list的值存进去
+     * 按照key 取出来转换成数组
+     */
+    public static List<List<String>> groupAnagrams(String[] strs) {
+        HashMap<String,List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            char[] chars = str.toCharArray();
+            Arrays.sort(chars);
+            //注意：toString返回的事对象地址
+//            String key = chars.toString();
+            String key = new String(chars);
+            List<String> strings = map.getOrDefault(key,new ArrayList<String>());
+            strings.add(str);
+            map.put(key,strings);
+        }
+        return new ArrayList<List<String>>(map.values());
+
+    }
+```
+
+
+
+
+
+## [560. 和为 K 的子数组](/https://leetcode.cn/problems/subarray-sum-equals-k/description/?envType=study-plan-v2&id=top-100-liked)
+
+
+
+中等
+
+
+
+给你一个整数数组 `nums` 和一个整数 `k` ，请你统计并返回 *该数组中和为 k 的连续子数组的个数* 。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [1,1,1], k = 2
+输出：2
+```
+
+**示例 2：**
+
+```
+输入：nums = [1,2,3], k = 3
+输出：2
+```
+
+ 
+
+**提示：**
+
+- `1 <= nums.length <= 2 * 104`
+- `-1000 <= nums[i] <= 1000`
+- `-107 <= k <= 107`
+
+
+
+```
+    /**
+     * @param nums 560. 和为 K 的子数组
+     * @param k
+     * @return 考虑以nums[i]开头的子数列，遍历所有nums[i]到num[j]满足和为k
+     */
+    public static int subarraySum(int[] nums, int k) {
+        int count = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int result = 0;
+            for (int j = i; j < nums.length; j++) {
+                result += nums[j];
+                if (result == k) {
+                    count++;
+                }
+            }
+        }
+        return count;
+
+    }
+```
+
+
+
+
+```
+        /**
+     * @param nums 利用前缀法，降低复杂度到o(n)
+     *             定义F(i)为从nums[0]到nums[i]的子序列和，那么
+     *             对于从nums[i]-nums[j]的子序列，它的和f(ij)=F(j)-F(i-1),j>=i>=0;
+     *             如果f(ij)=F(j)-F(i-1)=K。则满足条件
+     *             依次计算F(i)的值并存储到map中，value为出现的次数，
+     *             如果map中存在k-F(i)的值则count+1；
+     * @param k
+     * @return
+     * {5, 1, 4, 7, 3, -1, 0, 5, 8, -1, 6};5
+     * [1,-1,0];0==3
+     *
+     */
+    public static int subarraySum2(int[] nums, int k) {
+        int count = 0;
+        int sum = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0, 1);
+        for (int num : nums) {
+            sum = sum + num;
+            Integer orDefault = map.getOrDefault(sum, 0);
+            if (map.containsKey(sum - k)) {
+                count += map.get(sum-k);
+            }
+            map.put(sum, orDefault +1);
+        }
+        return count;
+
+    }
+```
+
+总结:和53比较
 
