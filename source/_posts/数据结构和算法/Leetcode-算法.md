@@ -666,6 +666,694 @@ public int maxSubArray(int[] nums) {
 
 
 
+# 链表
+
+## [160. 相交链表](https://leetcode-cn.com/problems/intersection-of-two-linked-lists/)
+
+难度简单
+
+给你两个单链表的头节点 `headA` 和 `headB` ，请你找出并返回两个单链表相交的起始节点。如果两个链表不存在相交节点，返回 `null` 。
+
+图示两个链表在节点 `c1` 开始相交**：**
+
+[![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_statement.png)](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_statement.png)
+
+题目数据 **保证** 整个链式结构中不存在环。
+
+**注意**，函数返回结果后，链表必须 **保持其原始结构** 。
+
+**自定义评测：**
+
+**评测系统** 的输入如下（你设计的程序 **不适用** 此输入）：
+
+- `intersectVal` - 相交的起始节点的值。如果不存在相交节点，这一值为 `0`
+- `listA` - 第一个链表
+- `listB` - 第二个链表
+- `skipA` - 在 `listA` 中（从头节点开始）跳到交叉节点的节点数
+- `skipB` - 在 `listB` 中（从头节点开始）跳到交叉节点的节点数
+
+评测系统将根据这些输入创建链式数据结构，并将两个头节点 `headA` 和 `headB` 传递给你的程序。如果程序能够正确返回相交节点，那么你的解决方案将被 **视作正确答案** 。
+
+ 
+
+**示例 1：**
+
+[![img](https://assets.leetcode.com/uploads/2021/03/05/160_example_1_1.png)](https://assets.leetcode.com/uploads/2018/12/13/160_example_1.png)
+
+```text
+输入：intersectVal = 8, listA = [4,1,8,4,5], listB = [5,6,1,8,4,5], skipA = 2, skipB = 3
+输出：Intersected at '8'
+解释：相交节点的值为 8 （注意，如果两个链表相交则不能为 0）。
+从各自的表头开始算起，链表 A 为 [4,1,8,4,5]，链表 B 为 [5,6,1,8,4,5]。
+在 A 中，相交节点前有 2 个节点；在 B 中，相交节点前有 3 个节点。
+```
+
+**示例 2：**
+
+[![img](https://assets.leetcode.com/uploads/2021/03/05/160_example_2.png)](https://assets.leetcode.com/uploads/2018/12/13/160_example_2.png)
+
+```text
+输入：intersectVal = 2, listA = [1,9,1,2,4], listB = [3,2,4], skipA = 3, skipB = 1
+输出：Intersected at '2'
+解释：相交节点的值为 2 （注意，如果两个链表相交则不能为 0）。
+从各自的表头开始算起，链表 A 为 [1,9,1,2,4]，链表 B 为 [3,2,4]。
+在 A 中，相交节点前有 3 个节点；在 B 中，相交节点前有 1 个节点。
+```
+
+**示例 3：**
+
+[![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/14/160_example_3.png)](https://assets.leetcode.com/uploads/2018/12/13/160_example_3.png)
+
+```text
+输入：intersectVal = 0, listA = [2,6,4], listB = [1,5], skipA = 3, skipB = 2
+输出：null
+解释：从各自的表头开始算起，链表 A 为 [2,6,4]，链表 B 为 [1,5]。
+由于这两个链表不相交，所以 intersectVal 必须为 0，而 skipA 和 skipB 可以是任意值。
+这两个链表不相交，因此返回 null 。
+```
+
+ 
+
+**提示：**
+
+- `listA` 中节点数目为 `m`
+- `listB` 中节点数目为 `n`
+- `1 <= m, n <= 3 * 104`
+- `1 <= Node.val <= 105`
+- `0 <= skipA <= m`
+- `0 <= skipB <= n`
+- 如果 `listA` 和 `listB` 没有交点，`intersectVal` 为 `0`
+- 如果 `listA` 和 `listB` 有交点，`intersectVal == listA[skipA] == listB[skipB]`
+
+ 
+
+**进阶：**你能否设计一个时间复杂度 `O(m + n)` 、仅用 `O(1)` 内存的解决方案？
+
+------
+
+方法一：遍历链表1，将节点存到HashSet中，遍历链表2，看节点是否在hashSet中，在则相交
+
+```
+    public ListNode getIntersectionNode1(ListNode headA, ListNode headB) {
+        Set<ListNode> nodeSet = new HashSet<>();
+        ListNode temp = headA;
+        while (temp!=null){
+            nodeSet.add(temp);
+            temp =temp.next;
+        }
+        temp = headB;
+        while (temp!=null){
+            if (nodeSet.contains(temp)){
+                return temp;
+            }else {
+                temp = temp.next;
+            }
+        }
+        return null;
+    }
+```
+
+时间：m+n；空间：m
+
+
+
+方法二：
+
+```java
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode preA = headA;
+        ListNode preB = headB;
+        while (preA != preB) {
+            preA = preA == null ? headB : preA.next;
+            preB = preB == null ? headA : preB.next;
+        }
+        return preA;
+    }
+```
+时间：m+n;空间：1
+
+
+
+## [206. 反转链表todo](https://leetcode-cn.com/problems/reverse-linked-list/)
+
+
+
+难度简单
+
+给你单链表的头节点  
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/02/19/rev1ex1.jpg)
+
+```text
+输入：head = [1,2,3,4,5]
+输出：[5,4,3,2,1]
+```
+
+**示例 2：**
+
+![img](https://assets.leetcode.com/uploads/2021/02/19/rev1ex2.jpg)
+
+```text
+输入：head = [1,2]
+输出：[2,1]
+```
+
+**示例 3：**
+
+```text
+输入：head = []
+输出：[]
+```
+
+ 
+
+**提示：**
+
+- 链表中节点的数目范围是 `[0, 5000]`
+- `-5000 <= Node.val <= 5000`
+
+ 
+
+**进阶：**链表可以选用迭代或递归方式完成反转。你能否用两种方法解决这道题？
+
+------
+
+方法一：利用中间变量依次反转，注意返回的事pre（迭代）
+
+```
+    public ListNode reverseList3(ListNode head) {
+        ListNode pre = null;
+        ListNode curr = head;
+
+        while (curr!=null){
+            ListNode next = curr.next;
+            curr.next=pre;
+            pre = curr;
+            curr =next;
+        }
+        return pre;
+    }
+```
+
+
+
+方法二：递归todo很难理解
+
+
+
+
+
+## [234. 回文链表](https://leetcode-cn.com/problems/palindrome-linked-list/)
+
+
+
+难度简单
+
+给你一个单链表的头节点 `head` ，请你判断该链表是否为回文链表。如果是，返回 `true` ；否则，返回 `false` 。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/03/03/pal1linked-list.jpg)
+
+```text
+输入：head = [1,2,2,1]
+输出：true
+```
+
+**示例 2：**
+
+![img](https://assets.leetcode.com/uploads/2021/03/03/pal2linked-list.jpg)
+
+```text
+输入：head = [1,2]
+输出：false
+```
+
+ 
+
+**提示：**
+
+- 链表中节点数目在范围`[1, 105]` 内
+- `0 <= Node.val <= 9`
+
+ 
+
+**进阶：**你能否用 `O(n)` 时间复杂度和 `O(1)` 空间复杂度解决此题？
+
+------
+
+思路：
+
+如果不考虑空间，将原链表反转得到的新链表，依次比较即可。
+
+利用快慢指针找到中间位置，将后半部分反转，
+
+比较前半部分是否和后半部分相同
+
+```java
+public boolean isPalindrome(ListNode head) {
+        if (head == null) {
+            return false;
+        }
+        ListNode slow = head;
+        ListNode fast = head.next;
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+        //此时无论是有技术还是偶数个 slow.next就是后半段的起点
+        ListNode middle = slow.next;
+        ListNode halfLeft = reverseList2(middle);
+        while (halfLeft !=null) {
+            if (head.val != halfLeft.val) {
+                return false;
+            } else {
+                head = head.next;
+                halfLeft = halfLeft.next;
+            }
+        }
+        return true;
+    }
+    public static ListNode reverseList2(ListNode head) {
+
+        ListNode pre = null;
+        ListNode curr = head;
+
+        while (curr != null) {
+            ListNode next = curr.next;
+            curr.next = pre;
+            pre = curr;
+            curr = next;
+        }
+        return pre;
+    }    
+```
+
+
+
+todo：还有种递归算法
+
+
+
+## [141. 环形链表(完)](https://leetcode-cn.com/problems/linked-list-cycle/)
+
+难度简单
+
+给你一个链表的头节点 `head` ，判断链表中是否有环。
+
+如果链表中有某个节点，可以通过连续跟踪 `next` 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 `pos` 来表示链表尾连接到链表中的位置（索引从 0 开始）。**注意：pos 不作为参数进行传递** 。仅仅是为了标识链表的实际情况。
+
+*如果链表中存在环* ，则返回 `true` 。 否则，返回 `false` 。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist.png)
+
+```text
+输入：head = [3,2,0,-4], pos = 1
+输出：true
+解释：链表中有一个环，其尾部连接到第二个节点。
+```
+
+**示例 2：**
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test2.png)
+
+```text
+输入：head = [1,2], pos = 0
+输出：true
+解释：链表中有一个环，其尾部连接到第一个节点。
+```
+
+**示例 3：**
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test3.png)
+
+```text
+输入：head = [1], pos = -1
+输出：false
+解释：链表中没有环。
+```
+
+ 
+
+**提示：**
+
+- 链表中节点的数目范围是 `[0, 104]`
+- `-105 <= Node.val <= 105`
+- `pos` 为 `-1` 或者链表中的一个 **有效索引** 。
+
+ 
+
+**进阶：**你能用 `O(1)`（即，常量）内存解决此问题吗？
+
+------
+
+思路：因为o(1)，所有不能用HashSet来判断
+
+快慢指针
+
+方法二：题解中的快慢指针有环时一定相遇
+
+```java
+if (head==null||head.next==null){
+    return false;
+}
+ListNode slow = head;
+ListNode fast = head.next;
+while (slow!=fast){
+    if (fast==null||fast.next==null){
+        return false;
+    }
+    slow = slow.next;
+    fast = fast.next.next;
+}
+return true;
+```
+
+
+
+## [142. 环形链表 II](https://leetcode-cn.com/problems/linked-list-cycle-ii/)
+
+难度中等
+
+给定一个链表的头节点  `head` ，返回链表开始入环的第一个节点。 *如果链表无环，则返回 null。*
+
+如果链表中有某个节点，可以通过连续跟踪 `next` 指针再次到达，则链表中存在环。 为了表示给定链表中的环，评测系统内部使用整数 `pos` 来表示链表尾连接到链表中的位置（**索引从 0 开始**）。如果 `pos` 是 `-1`，则在该链表中没有环。**注意：pos 不作为参数进行传递**，仅仅是为了标识链表的实际情况。
+
+**不允许修改** 链表。
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2018/12/07/circularlinkedlist.png)
+
+```text
+输入：head = [3,2,0,-4], pos = 1
+输出：返回索引为 1 的链表节点
+解释：链表中有一个环，其尾部连接到第二个节点。
+```
+
+**示例 2：**
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test2.png)
+
+```text
+输入：head = [1,2], pos = 0
+输出：返回索引为 0 的链表节点
+解释：链表中有一个环，其尾部连接到第一个节点。
+```
+
+**示例 3：**
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2018/12/07/circularlinkedlist_test3.png)
+
+```text
+输入：head = [1], pos = -1
+输出：返回 null
+解释：链表中没有环。
+```
+
+**提示：**
+
+- 链表中节点的数目范围在范围 `[0, 104]` 内
+- `-105 <= Node.val <= 105`
+- `pos` 的值为 `-1` 或者链表中的一个有效索引
+
+**进阶：**你是否可以使用 `O(1)` 空间解决此题？
+
+------
+
+重点是理解，双指针是从head开始走
+
+![Picture1.png](https://pic.leetcode-cn.com/a4788076d4f3ad247c2023f92bb1585d05c5132ece7ed1205e2e171e25648adc-Picture1.png)
+
+
+
+```
+    public ListNode detectCycle(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+        while (fast != null) {
+            if (fast.next == null) {
+                return null;
+            }
+            fast = fast.next.next;
+            slow = slow.next;
+            if (fast == slow) {
+                ListNode start = head;
+                while (start != slow) {
+                    start = start.next;
+                    slow = slow.next;
+                }
+                return start;
+            }
+
+        }
+        return null;
+    }
+```
+
+
+
+
+
+
+
+## [21. 合并两个有序链表](https://leetcode-cn.com/problems/merge-two-sorted-lists/)
+
+难度简单
+
+将两个升序链表合并为一个新的 **升序** 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/10/03/merge_ex1.jpg)
+
+```text
+输入：l1 = [1,2,4], l2 = [1,3,4]
+输出：[1,1,2,3,4,4]
+```
+
+**示例 2：**
+
+```text
+输入：l1 = [], l2 = []
+输出：[]
+```
+
+**示例 3：**
+
+```text
+输入：l1 = [], l2 = [0]
+输出：[0]
+```
+
+ 
+
+**提示：**
+
+- 两个链表的节点数目范围是 `[0, 50]`
+- `-100 <= Node.val <= 100`
+- `l1` 和 `l2` 均按 **非递减顺序** 排列
+
+------
+
+方法一：
+
+```java
+    public ListNode mergeTwoLists2(ListNode list1, ListNode list2) {
+        ListNode head = new ListNode();
+        ListNode ans = head;
+        while (list1 != null && list2 != null) {
+            if (list1.val <= list2.val) {
+                ans.next = list1;
+                list1 = list1.next;
+            } else {
+                ans.next = list2;
+                list2 = list2.next;
+            }
+            ans = ans.next;
+        }
+        ans.next = list1 == null ? list2 : list1;
+        return head.next;
+    }
+```
+
+
+
+方法二：todo递归法：待理解
+
+```java
+public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    if (l1 == null) {
+        return l2;
+    } else if (l2 == null) {
+        return l1;
+    } else if (l1.val < l2.val) {
+        l1.next = mergeTwoLists(l1.next, l2);
+        return l1;
+    } else {
+        l2.next = mergeTwoLists(l1, l2.next);
+        return l2;
+    }
+}
+```
+
+
+
+
+
+## [2. 两数相加todo](https://leetcode-cn.com/problems/add-two-numbers/)
+
+难度中等
+
+给你两个 **非空** 的链表，表示两个非负的整数。它们每位数字都是按照 **逆序** 的方式存储的，并且每个节点只能存储 **一位** 数字。
+
+请你将两个数相加，并以相同形式返回一个表示和的链表。
+
+你可以假设除了数字 0 之外，这两个数都不会以 0 开头。
+
+**示例 1：**
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2021/01/02/addtwonumber1.jpg)
+
+```text
+输入：l1 = [2,4,3], l2 = [5,6,4]
+输出：[7,0,8]
+解释：342 + 465 = 807.
+```
+
+**示例 2：**
+
+```text
+输入：l1 = [0], l2 = [0]
+输出：[0]
+```
+
+**示例 3：**
+
+```text
+输入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
+输出：[8,9,9,9,0,0,0,1]
+```
+
+ 
+
+**提示：**
+
+- 每个链表中的节点数在范围 `[1, 100]` 内
+- `0 <= Node.val <= 9`
+- 题目数据保证列表表示的数字不含前导零
+
+------
+
+思路：链表 双指针 取余
+
+脑会了手不会
+
+注意最后一位是否需要进一位，定一个两个指针，一个指头用来返回，一个指尾用来计算
+
+```java
+public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+    ListNode head = null;
+    ListNode tail = null;
+    int a = 0;
+    while (l1 != null || l2 != null) {
+
+        int n1 = l1 == null ? 0 : l1.val;
+        int n2 = l2 == null ? 0 : l2.val;
+        int plus = n1 + n2 + a;
+        if (head == null) {
+            tail = head = new ListNode(plus % 10);
+        } else {
+            tail.next = new ListNode(plus % 10);
+            tail = tail.next;
+        }
+        a = plus / 10;
+        l1 = l1 == null ? null : l1.next;
+        l2 = l2 == null ? null : l2.next;
+    }
+    if (a>0){
+        tail.next = new ListNode(a);
+    }
+
+    return head;
+}
+```
+
+
+
+
+
+## [19. 删除链表的倒数第 N 个结点](https://leetcode-cn.com/problems/remove-nth-node-from-end-of-list/)
+
+难度中等
+给你一个链表，删除链表的倒数第 `n` 个结点，并且返回链表的头结点。
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/10/03/remove_ex1.jpg)
+
+输入：head = [1,2,3,4,5], n = 2
+输出：[1,2,3,5]
+
+**示例 2：**
+
+输入：head = [1], n = 1
+输出：[]
+
+**示例 3：**
+
+输入：head = [1,2], n = 1
+输出：[1]
+
+**提示：**
+
+- 链表中结点的数目为 `sz`
+- `1 <= sz <= 30`
+- `0 <= Node.val <= 100`
+- `1 <= n <= sz`
+
+**进阶：**你能尝试使用一趟扫描实现吗？
+
+------
+
+思路：一次扫描要找到倒数第n个节点，需要用到快慢`双指针`
+
+```java
+    public ListNode removeNthFromEnd(ListNode head, int n) {
+        ListNode pre = new ListNode();
+        pre.next = head;
+        ListNode fast = pre,slow =pre;
+        for (int i = 0; i < n; i++) {
+            fast = fast.next;
+        }
+        while (fast.next!=null){
+            fast = fast.next;
+            slow = slow.next;
+        }
+        slow.next = slow.next.next;
+        // 考虑到只有一个元素的情况下 head可能会被移除
+        return pre.next;
+    }
+```
+
+
+
+
+
+
 
 
 # 回溯
@@ -1594,11 +2282,428 @@ todo:降低时间复杂度的算法
 
 写完后发现错了，结果不一定包括最大的，有可能只能被最小的整除；
 
-看题解，还是动态规划
+看题解，还是动态规划，重点是怎么规划！！
+
+```
+    /**
+     * @param coins  322. 零钱兑换
+     * @param amount
+     * @return 假设dp[i]为凑齐i金额所需要的最少硬币书
+     * 那么：凑齐金额的最后一枚硬币必然是coins中的一个
+     * 动态转移方程为：dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+     * 初始化为dp[0]=0,dp[<0]不考虑
+     * 细节：初始化dp[i]为一个不可能达到的大值，这样取最小值取不到
+     */
+    public static int coinChange(int[] coins, int amount) {
+
+        int length = amount + 1;
+        int dp[] = new int[length];
+        Arrays.fill(dp, length);
+        dp[0] = 0;
+        for (int i = 1; i < length; i++) {
+            for (int coin : coins) {
+                if (i - coin >= 0) {
+                    dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+                }
+            }
+        }
+        return dp[amount] < length ? dp[amount] : -1;
+    }
+```
+
+
+
+## [139. 单词拆分](/https://leetcode.cn/problems/word-break/description/)
+
+中等
+
+给你一个字符串 `s` 和一个字符串列表 `wordDict` 作为字典。请你判断是否可以利用字典中出现的单词拼接出 `s` 。
+
+**注意：**不要求字典中出现的单词全部都使用，并且字典中的单词可以重复使用。
+
+ 
+
+**示例 1：**
+
+```
+输入: s = "leetcode", wordDict = ["leet", "code"]
+输出: true
+解释: 返回 true 因为 "leetcode" 可以由 "leet" 和 "code" 拼接成。
+```
+
+**示例 2：**
+
+```
+输入: s = "applepenapple", wordDict = ["apple", "pen"]
+输出: true
+解释: 返回 true 因为 "applepenapple" 可以由 "apple" "pen" "apple" 拼接成。
+     注意，你可以重复使用字典中的单词。
+```
+
+**示例 3：**
+
+```
+输入: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
+输出: false
+```
+
+ 
+
+**提示：**
+
+- `1 <= s.length <= 300`
+- `1 <= wordDict.length <= 1000`
+- `1 <= wordDict[i].length <= 20`
+- `s` 和 `wordDict[i]` 仅有小写英文字母组成
+- `wordDict` 中的所有字符串 **互不相同**
+
+---
+
+思路：知道动态，不知道怎么规划，看题解，一眼就知道了！
+
+```java
+    public static boolean wordBreak(String s, List<String> wordDict) {
+        Set<String> dictSet = new HashSet<>();
+        for (String word : wordDict) {
+            dictSet.add(word);
+        }
+        int length = s.length();
+
+        boolean dp[] = new boolean[length+1];
+
+        int start = 0;
+        for (int i = 1; i <= length; i++) {
+            String curr = s.substring(start, i);
+            dp[i] = dictSet.contains(curr);
+            if (dp[i]) {
+                start = i;
+            }
+
+        }
+        return dp[length];
+    }
+```
+
+
+
+结果发现错了！错误原因是动态转移方程想简单了，截断会导致比如s="aaaaaaa",dic = "aaaa","aaa"返回false
+
+
+
+# 多维动态规划
+
+## [64. 最小路径和（完）](https://leetcode-cn.com/problems/minimum-path-sum/)
+
+难度中等 
+
+给定一个包含非负整数的 `m x n` 网格 `grid` ，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+
+**说明：**每次只能向下或者向右移动一步。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/11/05/minpath.jpg)
+
+```text
+输入：grid = [[1,3,1],[1,5,1],[4,2,1]]
+输出：7
+解释：因为路径 1→3→1→1→1 的总和最小。
+```
+
+**示例 2：**
+
+```text
+输入：grid = [[1,2,3],[4,5,6]]
+输出：12
+```
+
+ 
+
+**提示：**
+
+- `m == grid.length`
+- `n == grid[i].length`
+- `1 <= m, n <= 200`
+- `0 <= grid[i][j] <= 100`
+
+------
+
+
+
+```java
+    public int minPathSum(int[][] grid) {
+        //二维的动态规划
+        //dp[i][j] 表示grid[i][j]处的最小路径值，
+        //则dp[i][j] = grid[i][j]+ Math.min(dp[i-1][j],dp[i][j-1]))
+        //计算边界条件dp[0][j]和dp[i][0]
+        int rows = grid.length;
+        int columns = grid[0].length;
+        int dp[][] = new int[rows][columns];
+        dp[0][0] = grid[0][0];
+        for(int i = 1 ;i<rows;i++){
+            dp[i][0] = dp[i-1][0] + grid[i][0];
+        }
+        for(int j = 1 ;j<columns;j++){
+            dp[0][j] = dp[0][j-1] + grid[0][j];
+        }
+        for(int i = 1 ;i<rows;i++){
+            for(int j = 1 ;j<columns;j++){
+            dp[i][j] = grid[i][j] + Math.min(dp[i-1][j],dp[i][j-1]);
+            }
+        }
+        return dp[rows-1][columns-1];       
+    }
+```
 
 
 
 
+
+## [62. 不同路径（完）](/https://leetcode.cn/problems/unique-paths/?envType=study-plan-v2&envId=top-100-liked)
+
+中等
+
+一个机器人位于一个 `m x n` 网格的左上角 （起始点在下图中标记为 “Start” ）。
+
+机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为 “Finish” ）。
+
+问总共有多少条不同的路径？
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2018/10/22/robot_maze.png)
+
+```
+输入：m = 3, n = 7
+输出：28
+```
+
+**示例 2：**
+
+```
+输入：m = 3, n = 2
+输出：3
+解释：
+从左上角开始，总共有 3 条路径可以到达右下角。
+1. 向右 -> 向下 -> 向下
+2. 向下 -> 向下 -> 向右
+3. 向下 -> 向右 -> 向下
+```
+
+**示例 3：**
+
+```
+输入：m = 7, n = 3
+输出：28
+```
+
+**示例 4：**
+
+```
+输入：m = 3, n = 3
+输出：6
+```
+
+ 
+
+**提示：**
+
+- `1 <= m, n <= 100`
+- 题目数据保证答案小于等于 `2 * 109`
+
+---
+
+```
+    public int uniquePaths(int m, int n) {
+
+        int dp[][] = new int[m][n];
+        dp[0][0] = 1;
+        for (int i = 1; i < m; i++) {
+            dp[i][0] = 1;
+        }
+        for (int j = 1; j < n; j++) {
+            dp[0][j] = 1;
+        }
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i - 1][j]+dp[i][j - 1];
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+```
+
+
+
+## [221. 最大正方形](https://leetcode-cn.com/problems/maximal-square/)
+
+难度中等
+
+在一个由 `'0'` 和 `'1'` 组成的二维矩阵内，找到只包含 `'1'` 的最大正方形，并返回其面积。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/11/26/max1grid.jpg)
+
+```text
+输入：matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+输出：4
+```
+
+**示例 2：**
+
+![img](https://assets.leetcode.com/uploads/2020/11/26/max2grid.jpg)
+
+```text
+输入：matrix = [["0","1"],["1","0"]]
+输出：1
+```
+
+**示例 3：**
+
+```text
+输入：matrix = [["0"]]
+输出：0
+```
+
+ 
+
+**提示：**
+
+- `m == matrix.length`
+- `n == matrix[i].length`
+- `1 <= m, n <= 300`
+- `matrix[i][j]` 为 `'0'` 或 `'1'`
+
+------
+
+
+
+```java
+public static int maximalSquare(char[][] matrix) {
+    //定义dp[i][j]表示以i行j列为右下角的且值全为1的正方形
+    //则当matrix[i][j]=0时,dp[i][j]=0
+    //则当matrix[i][j]=1时
+    //dp[i][j] = max(1,min(dp[i-1][j,dp[i][j-1],dp[i-1][j-1])])
+        int rows = matrix.length;
+        int columns = matrix[0].length;
+        int[][] dp = new int[rows][columns];
+        int maxSide = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (matrix[i][j] == '1') {
+                    if (i == 0 || j == 0) {
+                        dp[i][j] = 1;
+                    } else {
+                        dp[i][j] = Math.min(Math.min(dp[i - 1][j], dp[i - 1][j - 1]), dp[i][j - 1]) + 1;
+                    }
+                }
+                maxSide = Math.max(maxSide, dp[i][j]);
+            }
+        }
+        return maxSide * maxSide;
+```
+
+
+
+## [5. 最长回文子串](https://leetcode-cn.com/problems/longest-palindromic-substring/)
+
+难度中等
+
+给你一个字符串 `s`，找到 `s` 中最长的回文子串。
+
+ 
+
+**示例 1：**
+
+```text
+输入：s = "babad"
+输出："bab"
+解释："aba" 同样是符合题意的答案。
+```
+
+**示例 2：**
+
+```text
+输入：s = "cbbd"
+输出："bb"
+```
+
+ 
+
+**提示：**
+
+- `1 <= s.length <= 1000`
+- `s` 仅由数字和英文字母组成
+
+------
+
+思路：动态规划
+
+```java
+    public static String longestPalindrome0(String s) {
+        int longest = 0;
+        int length = s.length();
+        int start = 0;
+        int end = 0;
+        //dp[i][j]表示下标从i到j(i<=j)的子串是回文串的长度
+        int[][] dp = new int[length][length];
+        for (int j = 0; j < length; j++) {
+            for (int i = j; i >= 0; i--) {
+                if (i == j) {
+                    dp[i][j] = 1;
+                } else if (i == j - 1) {
+                    dp[i][j] = s.charAt(i) == s.charAt(j) ? 2 : 0;
+                } else {
+                    if (dp[i + 1][j - 1] == 0) {
+                        dp[i][j] = 0;
+                    } else {
+                        dp[i][j] = s.charAt(i) == s.charAt(j) ? 2 + dp[i + 1][j - 1] : 0;
+                    }
+                }
+                if (dp[i][j] > longest) {
+                    longest = dp[i][j];
+                    start = i;
+                    end = j;
+                }
+            }
+        }
+        return s.substring(start, end + 1);
+    }
+```
+
+缺点：速度慢，因为需要算出所有情况
+
+中心遍历法
+
+```java
+        int length = s.length();
+        int longest = 0;
+        int longestStart = 0;
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < 2; j++) {
+                int start = i;
+                int end = i + j;
+                while (start >= 0 && end < length && s.charAt(start) == s.charAt(end)) {
+                    start--;
+                    end++;
+                }
+                ////注意这里start--后end++后，需要从+1到-1还原长度
+                int currentLongest = end - start - 1;
+                if (currentLongest > longest) {
+                    longest = currentLongest;
+                    longestStart = start + 1;
+                }
+            }
+        }
+        return s.substring(longestStart, longestStart + longest);
+```
 
 
 
@@ -1749,6 +2854,60 @@ public static int singleNumber3(int[] nums) {
         return majority;
     }
 ```
+
+
+
+## [287. 寻找重复数](/https://leetcode.cn/problems/find-the-duplicate-number/description/?envType=study-plan-v2&envId=top-100-liked)
+
+给定一个包含 `n + 1` 个整数的数组 `nums` ，其数字都在 `[1, n]` 范围内（包括 `1` 和 `n`），可知至少存在一个重复的整数。
+
+假设 `nums` 只有 **一个重复的整数** ，返回 **这个重复的数** 。
+
+你设计的解决方案必须 **不修改** 数组 `nums` 且只用常量级 `O(1)` 的额外空间。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [1,3,4,2,2]
+输出：2
+```
+
+**示例 2：**
+
+```
+输入：nums = [3,1,3,4,2]
+输出：3
+```
+
+ 
+
+**提示：**
+
+- `1 <= n <= 105`
+- `nums.length == n + 1`
+- `1 <= nums[i] <= n`
+- `nums` 中 **只有一个整数** 出现 **两次或多次** ，其余整数均只出现 **一次**
+
+ 
+
+**进阶：**
+
+- 如何证明 `nums` 中至少存在一个重复的数字?
+- 你可以设计一个线性级时间复杂度 `O(n)` 的解决方案吗
+
+
+
+---
+
+思路：长度为n数组放了0到n-1的数，可以想象一个线性的链表
+
+如果放了0到n的n+1个数，则链表必然有环，重复的那个数就是环的入口点，算法同环形链表二
+
+
+
+
 
 
 
