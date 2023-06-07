@@ -1405,6 +1405,186 @@ public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 
 
 
+
+
+# 二分查找
+
+
+
+# 栈
+
+## [20. 有效的括号](https://leetcode-cn.com/problems/valid-parentheses/)
+
+难度简单
+
+给定一个只包括 `'('`，`')'`，`'{'`，`'}'`，`'['`，`']'` 的字符串 `s` ，判断字符串是否有效。
+
+有效字符串需满足：
+
+1. 左括号必须用相同类型的右括号闭合。
+2. 左括号必须以正确的顺序闭合。
+3. 每个右括号都有一个对应的相同类型的左括号。
+
+ 
+
+**示例 1：**
+
+```
+输入：s = "()"
+输出：true
+```
+
+**示例 2：**
+
+```
+输入：s = "()[]{}"
+输出：true
+```
+
+**示例 3：**
+
+```
+输入：s = "(]"
+输出：false
+```
+
+ 
+
+**提示：**
+
+- `1 <= s.length <= 104`
+- `s` 仅由括号 `'()[]{}'` 组成
+
+------
+
+思路：遇到左括号进栈，遇到右括号，出对应的左括号的栈，看是否成功
+
+引申：java中栈类的api和使用
+
+```
+    public static boolean isValid2(String s) {
+        int length = s.length();
+        if (length % 2 != 0) {
+            return false;
+        }
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < length; i++) {
+            char c = s.charAt(i);
+            if (c == '{' || c == '(' || c == '[') {
+                stack.push(c);
+            } else {
+                if (!stack.isEmpty()) {
+                    return false;
+                }
+                Character pop = stack.pop();
+                if (c == '}' && pop != '{') {
+                    return false;
+                } else if (c == ')' && pop != '(') {
+                    return false;
+                } else if (c == ']' && pop != '[') {
+                    return false;
+                }
+            }
+        }
+        return stack.isEmpty();
+    }
+```
+
+
+
+```
+    public static boolean isValid2(String s) {
+        Stack<Character> stack = new Stack<>();
+        if (s.length() % 2 != 0) {
+            return false;
+        }
+        char[] chars = s.toCharArray();
+        for (char aChar : chars) {
+
+            if (aChar == '(') {
+                stack.push(')');
+            } else if (aChar == '{') {
+                stack.push('}');
+            } else if (aChar == '[') {
+                stack.push(']');
+            } else {
+                if (stack.empty()) {
+                    return false;
+                } else {
+                    if (stack.pop() != aChar) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return stack.empty();
+    }
+```
+
+
+
+## [155. 最小栈](https://leetcode-cn.com/problems/min-stack/)
+
+难度中等
+
+设计一个支持 `push` ，`pop` ，`top` 操作，并能在常数时间内检索到最小元素的栈。
+
+实现 `MinStack` 类:
+
+- `MinStack()` 初始化堆栈对象。
+- `void push(int val)` 将元素val推入堆栈。
+- `void pop()` 删除堆栈顶部的元素。
+- `int top()` 获取堆栈顶部的元素。
+- `int getMin()` 获取堆栈中的最小元素。
+
+ 
+
+**示例 1:**
+
+```
+输入：
+["MinStack","push","push","push","getMin","pop","top","getMin"]
+[[],[-2],[0],[-3],[],[],[],[]]
+
+输出：
+[null,null,null,null,-3,null,0,-2]
+
+解释：
+MinStack minStack = new MinStack();
+minStack.push(-2);
+minStack.push(0);
+minStack.push(-3);
+minStack.getMin();   --> 返回 -3.
+minStack.pop();
+minStack.top();      --> 返回 0.
+minStack.getMin();   --> 返回 -2.
+```
+
+ 
+
+**提示：**
+
+- `-231 <= val <= 231 - 1`
+- `pop`、`top` 和 `getMin` 操作总是在 **非空栈** 上调用
+- `push`, `pop`, `top`, and `getMin`最多被调用 `3 * 104` 次
+
+------
+
+
+
+
+
+
+
+# 堆
+
+
+
+
+
+
+
 # 贪心算法
 
 
@@ -2125,25 +2305,23 @@ todo:简化成 只存储前两个的值
         //定义dp[i]表示以第i个数结尾的（包含nums[i])的最长子序列长度，
         //则dp[i]= nums[i]>nums[j](0<=j<i)的最大dp[j]+1，没有nums[i]>nums[j]，则dp[i]=1
         //取出dp[i]的最大值
-        int maxNum = 1;
         int length = nums.length;
         int[] dp = new int[length];
-        dp[0] = 0;
-        for (int i = 0; i < length ; i++) {
+        dp[0] = 1;
+        int longest = 0;
+        for (int i = 1; i < length; i++) {
             for (int j = 0; j < i; j++) {
-                if (nums[i]>nums[j]){
-                    dp[i] = Math.max(dp[i],dp[j]);
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
                 }
             }
-            maxNum = Math.max(maxNum,++dp[i]);
+            longest = Math.max(longest, dp[i]);
         }
-        return maxNum;
+        return longest;
     }
 ```
 
-执行用时：65 ms, 在所有 Java 提交中击败了23.68%的用户
 
-内存消耗：37.5 MB, 在所有 Java 提交中击败了99.37%的用户
 
 todo:降低时间复杂度的算法
 
@@ -2387,6 +2565,206 @@ todo:降低时间复杂度的算法
 
 
 结果发现错了！错误原因是动态转移方程想简单了，截断会导致比如s="aaaaaaa",dic = "aaaa","aaa"返回false
+
+```
+    public static boolean wordBreak2(String s, List<String> wordDict) {
+        //假设dp[i]表示字符串s中前i个字符的子串是否能被字典拆分
+        //则 dp[i] = dp[j] && s.substring(j+1,i+1)在字典中
+        int length = s.length();
+        Set<String> dictSet = new HashSet<>(wordDict);
+        boolean dp[] = new boolean[length+1];
+        dp[0]=true;
+        for (int i = 1; i <= length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (dp[j]==true){
+                    dp[i]=dp[j]&&dictSet.contains(s.substring(j,i));
+                    if (dp[i]){
+                        break;
+                    }
+                }
+            }
+        }
+        return dp[length];
+    }
+```
+
+
+
+## [279. 完全平方数](/https://leetcode.cn/problems/perfect-squares/submissions/438041473/?envType=study-plan-v2&envId=top-100-liked)
+
+
+
+给你一个整数 `n` ，返回 *和为 n 的完全平方数的最少数量* 。
+
+**完全平方数** 是一个整数，其值等于另一个整数的平方；换句话说，其值等于一个整数自乘的积。例如，`1`、`4`、`9` 和 `16` 都是完全平方数，而 `3` 和 `11` 不是。
+
+ 
+
+**示例 1：**
+
+```
+输入：n = 12
+输出：3 
+解释：12 = 4 + 4 + 4
+```
+
+**示例 2：**
+
+```
+输入：n = 13
+输出：2
+解释：13 = 4 + 9
+```
+
+ 
+
+**提示：**
+
+- `1 <= n <= 104`
+
+---
+
+思路没错，就是速度慢，慢的原因是每次判断平方数，其实set的值只能是1,2,3...这些，不用记录直接判断就行
+
+
+
+```
+    /**
+     * @param n
+     * @return 279. 完全平方数
+     * 用一个Set记录所有的完全平方数，m1，m2..
+     * dp[n]为和为 n 的完全平方数的最少数量
+     * 则dp[i]=1,如果能被开方
+     * 否则，dp[i]=min{dp[i-m1],dp[i-m2]..}+1
+     */
+    public static int numSquares(int n) {
+        Set<Integer> set = new HashSet<>();
+        int[] dp = new int[n + 1];
+        for (int i = 1; i <= n; i++) {
+            if (isPerfectSquare(i)) {
+                set.add(i);
+                dp[i] = 1;
+            } else {
+                int min = Integer.MAX_VALUE;
+                for (Integer integer : set) {
+                    min = Math.min(dp[i - integer], min);
+                }
+                dp[i]=min+1;
+            }
+        }
+        return dp[n];
+
+    }
+    private static boolean isPerfectSquare(int n){
+        int square = (int) Math.sqrt(n);
+        return square*square==n;
+    }
+```
+
+
+
+```
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp,n);
+        dp[0]=0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j*j <= i; j++) {
+                dp[i]= Math.min(dp[i-j*j],dp[i]);
+            }
+            dp[i]++;
+        }
+        return dp[n];
+    }
+```
+
+todo还是有点慢
+
+
+
+## [300. 最长递增子序列todo](/https://leetcode.cn/problems/longest-increasing-subsequence/?envType=study-plan-v2&envId=top-100-liked)
+
+中等
+
+给你一个整数数组 `nums` ，找到其中最长严格递增子序列的长度。
+
+**子序列** 是由数组派生而来的序列，删除（或不删除）数组中的元素而不改变其余元素的顺序。例如，`[3,6,2,7]` 是数组 `[0,3,1,6,2,2,7]` 的子序列。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [10,9,2,5,3,7,101,18]
+输出：4
+解释：最长递增子序列是 [2,3,7,101]，因此长度为 4 。
+```
+
+**示例 2：**
+
+```
+输入：nums = [0,1,0,3,2,3]
+输出：4
+```
+
+**示例 3：**
+
+```
+输入：nums = [7,7,7,7,7,7,7]
+输出：1
+```
+
+ 
+
+**提示：**
+
+- `1 <= nums.length <= 2500`
+- `-104 <= nums[i] <= 104`
+
+ 
+
+**进阶：**
+
+- 你能将算法的时间复杂度降低到 `O(n log(n))` 吗?
+
+
+
+---
+
+
+
+```
+    /**
+     * @param nums
+     * @return 300. 最长递增子序列
+     */
+    public int lengthOfLIS(int[] nums) {
+        //定义dp[i]表示以第i个数结尾的（包含nums[i])的最长子序列长度，
+        //则dp[i]= nums[i]>nums[j](0<=j<i)的最大dp[j]+1，没有nums[i]>nums[j]，则dp[i]=1
+        //取出dp[i]的最大值
+        int length = nums.length;
+        int[] dp = new int[length];
+        dp[0] = 1;
+        int longest = 0;
+        for (int i = 1; i < length; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] > nums[j]) {
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+                }
+            }
+            longest = Math.max(longest, dp[i]);
+        }
+        return longest;
+    }
+```
+
+todo 进阶
+
+
+
+
+
+
 
 
 
@@ -2707,6 +3085,77 @@ public static int maximalSquare(char[][] matrix) {
 
 
 
+## [1143. 最长公共子序列](/https://leetcode.cn/problems/longest-common-subsequence/description/?envType=study-plan-v2&envId=top-100-liked)
+
+给定两个字符串 `text1` 和 `text2`，返回这两个字符串的最长 **公共子序列** 的长度。如果不存在 **公共子序列** ，返回 `0` 。
+
+一个字符串的 **子序列** 是指这样一个新的字符串：它是由原字符串在不改变字符的相对顺序的情况下删除某些字符（也可以不删除任何字符）后组成的新字符串。
+
+- 例如，`"ace"` 是 `"abcde"` 的子序列，但 `"aec"` 不是 `"abcde"` 的子序列。
+
+两个字符串的 **公共子序列** 是这两个字符串所共同拥有的子序列。
+
+ 
+
+**示例 1：**
+
+```
+输入：text1 = "abcde", text2 = "ace" 
+输出：3  
+解释：最长公共子序列是 "ace" ，它的长度为 3 。
+```
+
+**示例 2：**
+
+```
+输入：text1 = "abc", text2 = "abc"
+输出：3
+解释：最长公共子序列是 "abc" ，它的长度为 3 。
+```
+
+**示例 3：**
+
+```
+输入：text1 = "abc", text2 = "def"
+输出：0
+解释：两个字符串没有公共子序列，返回 0 。
+```
+
+ 
+
+**提示：**
+
+- `1 <= text1.length, text2.length <= 1000`
+- `text1` 和 `text2` 仅由小写英文字符组成。
+
+
+
+---
+
+思路，依然按照行列组成二维动态规划
+
+```
+    public int longestCommonSubsequence(String text1, String text2) {
+        int rows = text1.length();
+        int columns = text2.length();
+        int[][] dp = new int[rows + 1][columns + 1];
+        for (int i = 1; i < rows + 1; i++) {
+            int char1 = text1.charAt(i - 1);
+            for (int j = 1; j < columns + 1; j++) {
+                char char2 = text2.charAt(j - 1);
+                if (char1 == char2) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i][j - 1], dp[i - 1][j]);
+                }
+            }
+        }
+        return dp[rows][columns];
+    }
+```
+
+
+
 
 
 
@@ -2907,7 +3356,204 @@ public static int singleNumber3(int[] nums) {
 
 
 
+## [75. 颜色分类][/https://leetcode.cn/problems/sort-colors/description/?envType=study-plan-v2&envId=top-100-liked]
 
+中等
+
+
+
+给定一个包含红色、白色和蓝色、共 `n` 个元素的数组 `nums` ，**原地**对它们进行排序，使得相同颜色的元素相邻，并按照红色、白色、蓝色顺序排列。
+
+我们使用整数 `0`、 `1` 和 `2` 分别表示红色、白色和蓝色。
+
+
+
+必须在不使用库内置的 sort 函数的情况下解决这个问题。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [2,0,2,1,1,0]
+输出：[0,0,1,1,2,2]
+```
+
+**示例 2：**
+
+```
+输入：nums = [2,0,1]
+输出：[0,1,2]
+```
+
+ 
+
+**提示：**
+
+- `n == nums.length`
+- `1 <= n <= 300`
+- `nums[i]` 为 `0`、`1` 或 `2`
+
+ 
+
+**进阶：**
+
+- 你能想出一个仅使用常数空间的一趟扫描算法吗？
+
+
+
+---
+
+思路：双指针分别指向结尾0的下一个left和开头2的前一个right ，遍历当是2时，和right交换。。。
+
+```
+    public void sortColors(int[] nums) {
+        int length = nums.length;
+        int left = 0;
+        int right = length - 1;
+        for (int i = 0; i <= right; i++) {
+            while (nums[i] == 2 && i <= right) {
+                nums[i] = nums[right];
+                nums[right] = 2;
+                right--;
+            }
+            if (nums[i] == 0) {
+                nums[i] = nums[left];
+                nums[left] = 0;
+                left++;
+            }
+        }
+    }
+```
+
+
+
+## [31. 下一个排列](/https://leetcode.cn/problems/next-permutation/description/?envType=study-plan-v2&envId=top-100-liked)
+
+中等
+
+整数数组的一个 **排列**  就是将其所有成员以序列或线性顺序排列。
+
+- 例如，`arr = [1,2,3]` ，以下这些都可以视作 `arr` 的排列：`[1,2,3]`、`[1,3,2]`、`[3,1,2]`、`[2,3,1]` 。
+
+整数数组的 **下一个排列** 是指其整数的下一个字典序更大的排列。更正式地，如果数组的所有排列根据其字典顺序从小到大排列在一个容器中，那么数组的 **下一个排列** 就是在这个有序容器中排在它后面的那个排列。如果不存在下一个更大的排列，那么这个数组必须重排为字典序最小的排列（即，其元素按升序排列）。
+
+- 例如，`arr = [1,2,3]` 的下一个排列是 `[1,3,2]` 。
+- 类似地，`arr = [2,3,1]` 的下一个排列是 `[3,1,2]` 。
+- 而 `arr = [3,2,1]` 的下一个排列是 `[1,2,3]` ，因为 `[3,2,1]` 不存在一个字典序更大的排列。
+
+给你一个整数数组 `nums` ，找出 `nums` 的下一个排列。
+
+必须 **原地** 修改，只允许使用额外常数空间。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [1,2,3]
+输出：[1,3,2]
+```
+
+**示例 2：**
+
+```
+输入：nums = [3,2,1]
+输出：[1,2,3]
+```
+
+**示例 3：**
+
+```
+输入：nums = [1,1,5]
+输出：[1,5,1]
+```
+
+ 
+
+**提示：**
+
+- `1 <= nums.length <= 100`
+- `0 <= nums[i] <= 100`
+
+---
+
+思路： abcd从后向前遍历，
+
+d
+
+c比d小，则c放在d后，返回abdc，否则c>=d,abdc,继续遍历，
+
+b比dc中的一个数小，则找到第一个比b大的数，与之交换，返回，否则adcb继续遍历
+
+a同b
+
+一次通过！其实是个数学问题
+
+```
+    /**
+     * @param nums 31. 下一个排列
+     */
+    public static void nextPermutation(int[] nums) {
+        int length = nums.length;
+        int maxNum = nums[length-1];
+        for (int i = length-1; i >=0 ; i--) {
+            //此时找到了下一个排列
+            if (nums[i]<maxNum){
+                //将后面的反转
+                reverse(nums,i+1,length-1);
+                //找到第一个比当前数大的，交换位置
+                for (int j = i+1; j < length; j++) {
+                    if (nums[j]>nums[i]){
+                        int temp = nums[j];
+                        nums[j] =nums[i];
+                        nums[i] = temp;
+                        return;
+                    }
+                }
+
+            }else {
+                maxNum = nums[i];
+
+            }
+        }
+        //此时已经是最大的排列，只需反转即可
+        reverse(nums,0,length-1);
+    }
+    private static void reverse(int[] nums,int start,int end){
+        while (start<end){
+            int temp = nums[start];
+            nums[start] =nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }
+```
+
+官方做法更简洁：
+
+```
+    public static void nextPermutation2(int[] nums) {
+        //首先从最后一个开始找，找到第一个非降序排列的数
+        //即假设从i+1到j都是按降序排列的，只要nums[i]不比nums[i+1]大。则找到了
+        int i = nums.length-2;
+        while (i>=0&&nums[i]>=nums[i+1]){
+            i--;
+        }
+        //到没找到时i=-1，找到时i那个数是
+        if (i>-1){
+            int j = nums.length-1;
+            while (nums[j]>=nums[i]){
+                j--;
+            }
+            int temp = nums[j];
+            nums[j] =nums[i];
+            nums[i] = temp;
+        }
+        reverse(nums,i+1,nums.length-1);
+    }
+```
 
 
 
