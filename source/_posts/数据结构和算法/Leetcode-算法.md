@@ -295,6 +295,202 @@ public static void moveZeroes2(int[] nums) {
 
 
 
+## [15. 三数之和](/https://leetcode.cn/problems/3sum/description/)
+
+中等
+
+给你一个整数数组 `nums` ，判断是否存在三元组 `[nums[i], nums[j], nums[k]]` 满足 `i != j`、`i != k` 且 `j != k` ，同时还满足 `nums[i] + nums[j] + nums[k] == 0` 。请
+
+你返回所有和为 `0` 且不重复的三元组。
+
+**注意：**答案中不可以包含重复的三元组。
+
+ 
+
+**示例 1：**
+
+```
+输入：nums = [-1,0,1,2,-1,-4]
+输出：[[-1,-1,2],[-1,0,1]]
+解释：
+nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0 。
+nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0 。
+nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0 。
+不同的三元组是 [-1,0,1] 和 [-1,-1,2] 。
+注意，输出的顺序和三元组的顺序并不重要。
+```
+
+**示例 2：**
+
+```
+输入：nums = [0,1,1]
+输出：[]
+解释：唯一可能的三元组和不为 0 。
+```
+
+**示例 3：**
+
+```
+输入：nums = [0,0,0]
+输出：[[0,0,0]]
+解释：唯一可能的三元组和为 0 。
+```
+
+ 
+
+**提示：**
+
+- `3 <= nums.length <= 3000`
+- `-105 <= nums[i] <= 105`
+
+
+
+---
+
+TODO:还需练习 
+
+```
+    public static List<List<Integer>> threeSum(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        Arrays.sort(nums);
+        int length = nums.length;
+        int maxRight;
+        for (int i = 0; i <= length - 3 && nums[i] <= 0; i++) {
+            //需要nums[i]<=0
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+            maxRight = length - 1;
+            int target = -nums[i];
+
+            for (int left = i + 1; left <= length - 2; left++) {
+                if (left > i + 1 && nums[left] == nums[left - 1]) {
+                    continue;
+                }
+                int right = maxRight;
+                while (left < right && nums[left] + nums[right] > target) {
+                    right--;
+                }
+                if (left == right) {
+                    break;
+                }
+                maxRight = right;
+                //超出时间的原因是只有当和为0时，才将right的范围缩小
+                //实际上：应该当他们的和》0时，也应该缩小right的范围
+                //当left++后值变大，和只能更大，所以right要缩小范围
+                if (nums[left] + nums[right] == 0) {
+                    List<Integer> list = new ArrayList<>();
+                    list.add(nums[i]);
+                    list.add(nums[left]);
+                    list.add(nums[right]);
+                    result.add(list);
+                }
+            }
+        }
+        return result;
+    }
+```
+
+
+
+## [11. 盛最多水的容器](/https://leetcode.cn/problems/container-with-most-water/?envType=study-plan-v2&envId=top-100-liked)
+
+中等
+
+给定一个长度为 `n` 的整数数组 `height` 。有 `n` 条垂线，第 `i` 条线的两个端点是 `(i, 0)` 和 `(i, height[i])` 。
+
+找出其中的两条线，使得它们与 `x` 轴共同构成的容器可以容纳最多的水。
+
+返回容器可以储存的最大水量。
+
+**说明：**你不能倾斜容器。
+
+ 
+
+**示例 1：**
+
+![img](https://aliyun-lc-upload.oss-cn-hangzhou.aliyuncs.com/aliyun-lc-upload/uploads/2018/07/25/question_11.jpg)
+
+```
+输入：[1,8,6,2,5,4,8,3,7]
+输出：49 
+解释：图中垂直线代表输入数组 [1,8,6,2,5,4,8,3,7]。在此情况下，容器能够容纳水（表示为蓝色部分）的最大值为 49。
+```
+
+**示例 2：**
+
+```
+输入：height = [1,1]
+输出：1
+```
+
+ 
+
+**提示：**
+
+- `n == height.length`
+- `2 <= n <= 105`
+- `0 <= height[i] <= 104`
+
+---
+
+思路：超时后，理解双指针的正确性
+
+解法一：优化后的双重for：超时
+
+```
+    public int maxArea(int[] height) {
+        int length = height.length;
+        int maxArea = 0;
+        for (int i = 0; i < length-1 ; i++) {
+            int maxRight = length-1;
+            int maxHeight = height[length-1];
+            for (int j = length-1; j >i ; j--) {
+                if (height[j]>maxHeight){
+                    //判断面积
+                    int area1 = Math.min(height[i], height[j])*(j-i);
+                    int area2 = Math.min(height[i], maxHeight)*(maxRight-i);
+                    if (area1>area2){
+                        maxRight = j;
+                        maxHeight = height[j];
+                    }
+                }
+            }
+            maxArea = Math.max(maxArea,Math.min(height[i], maxHeight)*(maxRight-i));
+            System.out.println(i+"==="+maxArea);
+        }
+        return maxArea;
+    }
+```
+
+
+
+```
+    public int maxArea2(int[] height) {
+        int length = height.length;
+        int maxArea = 0;
+        int left = 0;
+        int right = length - 1;
+        while (left < right) {
+            int minHeight = Math.min(height[left] , height[right]);
+            maxArea = Math.max(maxArea, minHeight * (right - left));
+            if (height[left] < height[right]) {
+                ++left;
+            } else {
+                --right;
+            }
+
+        }
+        return maxArea;
+    }
+```
+
+
+
+
+
+
+
 # 滑动窗口
 
 
@@ -1404,6 +1600,42 @@ public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
 
 
 
+
+## [78. 子集](https://leetcode-cn.com/problems/subsets/)
+
+难度中等
+
+给你一个整数数组 `nums` ，数组中的元素 **互不相同** 。返回该数组所有可能的子集（幂集）。
+
+解集 **不能** 包含重复的子集。你可以按 **任意顺序** 返回解集。
+
+ 
+
+**示例 1：**
+
+```text
+输入：nums = [1,2,3]
+输出：[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+```
+
+**示例 2：**
+
+```text
+输入：nums = [0]
+输出：[[],[0]]
+```
+
+ 
+
+**提示：**
+
+- `1 <= nums.length <= 10`
+- `-10 <= nums[i] <= 10`
+- `nums` 中的所有元素 **互不相同**
+
+------
+
+思路：
 
 
 
