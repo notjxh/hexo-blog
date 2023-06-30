@@ -801,40 +801,54 @@ sArr[s-'a']++
 
 
 
-##  [53. 最大子序和todo](https://leetcode-cn.com/problems/maximum-subarray/)
+##  [53. 最大子数组和todo](https://leetcode-cn.com/problems/maximum-subarray/)
+
+中等
 
 
-给定一个整数数组 nums ，找到一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
 
-示例 1：
+给你一个整数数组 `nums` ，请你找出一个具有最大和的连续子数组（子数组最少包含一个元素），返回其最大和。
 
+**子数组** 是数组中的一个连续部分。
+
+ 
+
+**示例 1：**
+
+```
 输入：nums = [-2,1,-3,4,-1,2,1,-5,4]
 输出：6
 解释：连续子数组 [4,-1,2,1] 的和最大，为 6 。
-示例 2：
+```
 
+**示例 2：**
+
+```
 输入：nums = [1]
 输出：1
-示例 3：
+```
 
-输入：nums = [0]
-输出：0
-示例 4：
+**示例 3：**
 
-输入：nums = [-1]
-输出：-1
-示例 5：
+```
+输入：nums = [5,4,-1,7,8]
+输出：23
+```
 
-输入：nums = [-100000]
-输出：-100000
+ 
+
+**提示：**
+
+- `1 <= nums.length <= 105`
+- `-104 <= nums[i] <= 104`
+
+ 
+
+**进阶：**如果你已经实现复杂度为 `O(n)` 的解法，尝试使用更为精妙的 **分治法** 求解。
+
+---
 
 
- 提示：
-
- 1 <= nums.length <= 10^5
- -10^4 <= nums[i] <= 10^4
-
-进阶：如果你已经实现复杂度为 O(n) 的解法，尝试使用更为精妙的 分治法 求解。
 
 
 
@@ -859,6 +873,168 @@ public int maxSubArray(int[] nums) {
 ```
 
 还有一种 todo分治法：
+
+
+
+## [189. 轮转数组](/https://leetcode.cn/problems/rotate-array/?envType=study-plan-v2&envId=top-100-liked)
+
+中等
+
+给定一个整数数组 `nums`，将数组中的元素向右轮转 `k` 个位置，其中 `k` 是非负数。
+
+ 
+
+**示例 1:**
+
+```
+输入: nums = [1,2,3,4,5,6,7], k = 3
+输出: [5,6,7,1,2,3,4]
+解释:
+向右轮转 1 步: [7,1,2,3,4,5,6]
+向右轮转 2 步: [6,7,1,2,3,4,5]
+向右轮转 3 步: [5,6,7,1,2,3,4]
+```
+
+**示例 2:**
+
+```
+输入：nums = [-1,-100,3,99], k = 2
+输出：[3,99,-1,-100]
+解释: 
+向右轮转 1 步: [99,-1,-100,3]
+向右轮转 2 步: [3,99,-1,-100]
+```
+
+ 
+
+**提示：**
+
+- `1 <= nums.length <= 105`
+- `-231 <= nums[i] <= 231 - 1`
+- `0 <= k <= 105`
+
+ 
+
+**进阶：**
+
+- 尽可能想出更多的解决方案，至少有 **三种** 不同的方法可以解决这个问题。
+- 你可以使用空间复杂度为 `O(1)` 的 **原地** 算法解决这个问题吗？
+
+
+
+---
+
+方法一：新建数组
+
+```
+    public static void rotate(int[] nums, int k) {
+        int length = nums.length;
+        int[] ans = new int[length];
+        for (int i = 0; i < length; i++) {
+            int n = (i + k) % length;
+            ans[n] = nums[i];
+        }
+//        nums = Arrays.copyOf(ans,length);
+//        nums = ans;
+        System.arraycopy(ans, 0, nums, 0, length);
+    }
+```
+
+方法二：反转数组
+
+```
+    public static void rotate2(int[] nums, int k) {
+        int length = nums.length;
+        int n = k % length;
+        reverse(nums, 0, length-1);
+        reverse(nums,0,n-1);
+        reverse(nums,n,length-1);
+    }
+    private static void reverse(int[] nums, int start, int end) {
+        while (start < end) {
+            int temp = nums[start];
+            nums[start] = nums[end];
+            nums[end] = temp;
+            start++;
+            end--;
+        }
+    }    
+```
+
+
+
+## [238. 除自身以外数组的乘积](/https://leetcode.cn/problems/product-of-array-except-self/description/)
+
+中等
+
+给你一个整数数组 `nums`，返回 *数组 answer ，其中 answer[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积* 。
+
+题目数据 **保证** 数组 `nums`之中任意元素的全部前缀元素和后缀的乘积都在  **32 位** 整数范围内。
+
+请**不要使用除法，**且在 `O(*n*)` 时间复杂度内完成此题。
+
+ 
+
+**示例 1:**
+
+```
+输入: nums = [1,2,3,4]
+输出: [24,12,8,6]
+```
+
+**示例 2:**
+
+```
+输入: nums = [-1,1,0,-3,3]
+输出: [0,0,9,0,0]
+```
+
+ 
+
+**提示：**
+
+- `2 <= nums.length <= 105`
+- `-30 <= nums[i] <= 30`
+- **保证** 数组 `nums`之中任意元素的全部前缀元素和后缀的乘积都在  **32 位** 整数范围内
+
+ 
+
+**进阶：**你可以在 `O(1)` 的额外空间复杂度内完成这个题目吗？（ 出于对空间复杂度分析的目的，输出数组**不被视为**额外空间。）
+
+
+
+---
+
+
+
+```
+    public int[] productExceptSelf(int[] nums) {
+        int length = nums.length;
+        int L[] = new int[length];
+        int R[] = new int[length];
+        int ans[] = new int[length];
+        L[0] = 1;
+        R[length - 1] = 1;
+/*        for (int i = 1; i < length; i++) {
+            L[i] = L[i - 1] * nums[i];
+            R[length - i - 1] = R[length - i] * nums[length - i - 1];
+        }*/
+        for (int i = 1; i < length; i++) {
+            L[i] = L[i - 1] * nums[i - 1];
+        }
+        for (int i = length - 2; i >= 0; i--) {
+            R[i] = R[i + 1] * nums[i + 1];
+        }
+        for (int i = 0; i < length; i++) {
+            ans[i] = L[i] * R[i];
+        }
+        return ans;
+    }
+```
+
+
+
+
 
 
 
@@ -1542,6 +1718,137 @@ public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         slow.next = slow.next.next;
         // 考虑到只有一个元素的情况下 head可能会被移除
         return pre.next;
+    }
+```
+
+
+
+# 二叉树
+
+## [104. 二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
+
+难度简单
+
+给定一个二叉树，找出其最大深度。
+
+二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
+
+**说明:** 叶子节点是指没有子节点的节点。
+
+**示例：**
+给定二叉树 `[3,9,20,null,null,15,7]`，
+
+```text
+    3
+   / \
+  9  20
+    /  \
+   15   7
+```
+
+返回它的最大深度 3 。
+
+------
+
+思路：没有，看题解
+
+```java
+
+public int maxDepth(TreeNode root) {
+    if (root==null){
+        return 0;
+    }
+    return Math.max(maxDepth(root.left),maxDepth(root.right))+1;
+}
+```
+
+
+
+todo 广度优先算法
+
+
+
+## [226. 翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
+
+难度简单
+
+给你一棵二叉树的根节点 `root` ，翻转这棵二叉树，并返回其根节点。
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/03/14/invert1-tree.jpg)
+
+输入：root = [4,2,7,1,3,6,9]
+输出：[4,7,2,9,6,3,1]
+
+**示例 2：**
+
+![img](https://assets.leetcode.com/uploads/2021/03/14/invert2-tree.jpg)
+
+输入：root = [2,1,3]
+输出：[2,3,1]
+
+**示例 3：**
+
+输入：root = []
+输出：[]
+
+**提示：**
+
+- 树中节点数目范围在 `[0, 100]` 内
+- `-100 <= Node.val <= 100`
+
+------
+
+思路：
+
+把每一个节点的左右节点互调
+
+与[**101. 对称二叉树**](https://leetcode-cn.com/problems/symmetric-tree/)不同的是将root放入队列中并且比较的是
+
+!queue.isEmpty()
+
+迭代：
+
+```java
+    public TreeNode invertTree(TreeNode root) {
+        if(root==null){
+            return root;
+        }
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()){
+            TreeNode treeNode = queue.removeFirst();
+            TreeNode temp = treeNode.left;
+            treeNode.left = treeNode.right;
+            treeNode.right =temp;
+            if (treeNode.left!=null){
+                queue.add(treeNode.left);
+            }
+            if (treeNode.right!=null){
+                queue.add(treeNode.right);
+            }
+        }
+        return root;
+    }
+```
+
+
+
+递归：
+
+```java
+    public TreeNode invertTree(TreeNode root) {
+        if (root ==null){
+            return null;
+        }
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right =temp;
+        invertTree(root.left);
+        invertTree(root.right);
+
+        return root;
     }
 ```
 

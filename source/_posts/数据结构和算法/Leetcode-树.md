@@ -83,146 +83,9 @@ todo:效率，递归
  */
 ```
 
-## [104. 二叉树的最大深度](https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/)
-
-难度简单
-
-给定一个二叉树，找出其最大深度。
-
-二叉树的深度为根节点到最远叶子节点的最长路径上的节点数。
-
-**说明:** 叶子节点是指没有子节点的节点。
-
-**示例：**
-给定二叉树 `[3,9,20,null,null,15,7]`，
-
-```text
-    3
-   / \
-  9  20
-    /  \
-   15   7
-```
-
-返回它的最大深度 3 。
-
----
-
-思路：没有，看题解
-
-```java
-/**
- * @param root
- * @return 104. 二叉树的最大深度
- * 递归解法：DFS 深度优先算法？
- */
-public int maxDepth(TreeNode root) {
-    if (root==null){
-        return 0;
-    }
-    return Math.max(maxDepth(root.left),maxDepth(root.right))+1;
-}
-```
-
-执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
-
-内存消耗：38.4 MB, 在所有 Java 提交中击败了66.59%的用户
-
-*todo 广度优先算法*
 
 
-## [226. 翻转二叉树](https://leetcode-cn.com/problems/invert-binary-tree/)
 
-难度简单
-
-给你一棵二叉树的根节点 `root` ，翻转这棵二叉树，并返回其根节点。
-
-
-**示例 1：**
-
-![img](https://assets.leetcode.com/uploads/2021/03/14/invert1-tree.jpg)
-
-输入：root = [4,2,7,1,3,6,9]
-输出：[4,7,2,9,6,3,1]
-
-**示例 2：**
-
-![img](https://assets.leetcode.com/uploads/2021/03/14/invert2-tree.jpg)
-
-输入：root = [2,1,3]
-输出：[2,3,1]
-
-**示例 3：**
-
-输入：root = []
-输出：[]
-
-
-**提示：**
-
-- 树中节点数目范围在 `[0, 100]` 内
-- `-100 <= Node.val <= 100`
-
----
-
-思路：
-
-把每一个节点的左右节点互调
-
-与[**101. 对称二叉树**](https://leetcode-cn.com/problems/symmetric-tree/)不同的是将root放入队列中并且比较的是
-
-!queue.isEmpty()
-
-迭代：
-
-```java
-    public TreeNode invertTree(TreeNode root) {
-        if(root==null){
-            return root;
-        }
-        LinkedList<TreeNode> queue = new LinkedList<>();
-        queue.add(root);
-        while (!queue.isEmpty()){
-            TreeNode treeNode = queue.removeFirst();
-            TreeNode temp = treeNode.left;
-            treeNode.left = treeNode.right;
-            treeNode.right =temp;
-            if (treeNode.left!=null){
-                queue.add(treeNode.left);
-            }
-            if (treeNode.right!=null){
-                queue.add(treeNode.right);
-            }
-        }
-        return root;
-    }
-```
-
-执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
-
-内存消耗：36.3 MB, 在所有 Java 提交中击败了5.19%的用户
-
-
-递归：
-
-```java
-    public TreeNode invertTree(TreeNode root) {
-        if (root ==null){
-            return null;
-        }
-        TreeNode temp = root.left;
-        root.left = root.right;
-        root.right =temp;
-        invertTree(root.left);
-        invertTree(root.right);
-
-        return root;
-    }
-```
-
-执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
-
-内存消耗：36.1 MB, 在所有 Java 提交中击败了7.56%的用户
 
 
 ## [543. 二叉树的直径](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
@@ -298,7 +161,7 @@ public int depth(TreeNode node) {
 
 **注意:** 合并过程必须从两个树的根节点开始。
 
- 
+
 **示例 1：**
 
 ![img](https://assets.leetcode.com/uploads/2021/02/05/merge.jpg)
