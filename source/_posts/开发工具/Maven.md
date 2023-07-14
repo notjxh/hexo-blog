@@ -640,6 +640,30 @@ idea中有一个自带的maven。  我们要让idea使用自己安装的maven。
 
 
 
+```
+	<mirrors>
+	<mirror>
+		<id>alimaven</id>
+		<mirrorOf>central</mirrorOf>
+		<name>aliyun maven</name>
+		<url>http://maven.aliyun.com/nexus/content/groups/public</url>	
+	</mirror>
+	
+	<mirror>
+		<id>centralmaven</id>
+		<mirrorOf>central</mirrorOf>
+		<name>central maven</name>
+		<url>http://mvnrepository.com</url>	
+	</mirror>
+
+		
+	</mirrors>
+```
+
+
+
+
+
 # 第七章 问题记录
 ## springboot项目 package时多出来 BOOT-INF文件夹
 

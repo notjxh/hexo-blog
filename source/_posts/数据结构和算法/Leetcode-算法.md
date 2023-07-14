@@ -1034,7 +1034,61 @@ public int maxSubArray(int[] nums) {
 
 
 
+# 矩阵
 
+## [73. 矩阵置零](/https://leetcode.cn/problems/set-matrix-zeroes/description/?envType=study-plan-v2&envId=top-100-liked)
+中等
+
+
+
+
+
+
+```
+    public void setZeroes(int[][] matrix) {
+        int rows = matrix.length;
+        int columns = matrix[0].length;
+        boolean flagRow0 = false;
+        boolean flagColumn0 = false;
+        for (int i = 0; i < rows; i++) {
+            if (matrix[i][0] == 0) {
+                flagColumn0 = true;
+            }
+        }
+        for (int j = 0; j < columns; j++) {
+            if (matrix[0][j] == 0) {
+                flagRow0 = true;
+            }
+        }
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (matrix[i][j] == 0) {
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
+                    continue;
+                }
+            }
+        }
+        for (int i = 1; i < rows; i++) {
+            for (int j = 1; j < columns; j++) {
+                if (matrix[0][j] == 0 || matrix[i][0] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+
+        }
+        if (flagRow0) {
+            for (int j = 0; j < columns; j++) {
+                matrix[0][j] = 0;
+            }
+        }
+        if (flagColumn0) {
+            for (int i = 0; i < rows; i++) {
+                matrix[i][0] = 0;
+            }
+        }
+    }
+```
 
 
 
@@ -1856,10 +1910,399 @@ todo 广度优先算法
 
 
 
+## [101. 对称二叉树](https://leetcode-cn.com/problems/symmetric-tree/)
+
+难度简单
+
+给你一个二叉树的根节点 `root` ， 检查它是否轴对称。
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/02/19/symtree1.jpg)
+
+输入：root = [1,2,2,3,4,4,3]
+输出：true
+
+**示例 2：**
+
+![img](https://assets.leetcode.com/uploads/2021/02/19/symtree2.jpg)
+
+输入：root = [1,2,2,null,3,null,3]
+输出：false
+
+**提示：**
+
+- 树中节点数目在范围 `[1, 1000]` 内
+- `-100 <= Node.val <= 100`
+
+**进阶：**你可以运用递归和迭代两种方法解决这个问题吗？
+
+------
+
+思路：题解
+
+迭代：
+
+```java
+    public boolean isSymmetric2(TreeNode root) {
+        LinkedList<TreeNode> queue = new LinkedList<>();
+        queue.add(root.left);
+        queue.add(root.right);
+        while (queue.size() > 0) {
+            TreeNode left = queue.removeFirst();
+            TreeNode right = queue.removeFirst();
+            if (left == null && right == null) {
+                continue;
+            }
+            if (left == null || right == null || left.val != right.val) {
+                return false;
+            }
+            queue.add(left.left);
+            queue.add(right.right);
+            queue.add(left.right);
+            queue.add(right.left);
+        }
+        return true;
+    }
+```
+
+
+
+递归：
+
+```java
+    public boolean isSymmetric(TreeNode root) {
+        return isSymmetric(root, root);
+    }
+
+    public boolean isSymmetric(TreeNode left, TreeNode right) {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null || right == null) {
+            return false;
+        }
+        if (left.val == right.val) {
+            return isSymmetric(left.left, right.right) && isSymmetric(left.right, right.left);
+        } else {
+            return false;
+        }
+    }
+```
+
+
+
+## [543. 二叉树的直径](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
+
+难度简单
+
+给你一棵二叉树的根节点，返回该树的 **直径** 。
+
+二叉树的 **直径** 是指树中任意两个节点之间最长路径的 **长度** 。这条路径可能经过也可能不经过根节点 `root` 。
+
+两节点之间路径的 **长度** 由它们之间边数表示。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/03/06/diamtree.jpg)
+
+```
+输入：root = [1,2,3,4,5]
+输出：3
+解释：3 ，取路径 [4,2,1,3] 或 [5,2,1,3] 的长度。
+```
+
+**示例 2：**
+
+```
+输入：root = [1,2]
+输出：1
+```
+
+ 
+
+**提示：**
+
+- 树中节点数目在范围 `[1, 104]` 内
+- `-100 <= Node.val <= 100`
+
+------
+
+思路：没有 看题解
+
+以每个节点为根节点的左右子树的最大深度之和
+
+```java
+
+    /**
+     * @param root
+     * @return 543. 二叉树的直径
+     */
+    //定义最长路径
+    // 刚好=左子树的最大高度+右子树的最大高度
+    int ans = 0;
+
+    public int diameterOfBinaryTree(TreeNode root) {
+
+        depth(root);
+        return ans;
+    }
+
+    /**
+     * @param node 迭代
+     * @return 求当前节点的最大深度，（=左右子树的最大深度之和+1）
+     * 并通过左右子树的最大深度比较更新总的最大深度
+     * 重点还是求树的最大高度
+     */
+    public int depth(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+        int L = depth(node.left);
+        int R = depth(node.right);
+        ans = Math.max(ans, L + R + 1);
+        return Math.max(L, R) + 1;
+    }
+```
+
+
+
+
+
+## [144. 二叉树的前序遍历](/https://leetcode.cn/problems/binary-tree-preorder-traversal/description/)
+
+给你二叉树的根节点 `root` ，返回它节点值的 **前序** 遍历。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2020/09/15/inorder_1.jpg)
+
+```
+输入：root = [1,null,2,3]
+输出：[1,2,3]
+```
+
+**示例 2：**
+
+```
+输入：root = []
+输出：[]
+```
+
+**示例 3：**
+
+```
+输入：root = [1]
+输出：[1]
+```
+
+**示例 4：**
+
+![img](https://assets.leetcode.com/uploads/2020/09/15/inorder_5.jpg)
+
+```
+输入：root = [1,2]
+输出：[1,2]
+```
+
+**示例 5：**
+
+![img](https://assets.leetcode.com/uploads/2020/09/15/inorder_4.jpg)
+
+```
+输入：root = [1,null,2]
+输出：[1,2]
+```
+
+ 
+
+**提示：**
+
+- 树中节点数目在范围 `[0, 100]` 内
+- `-100 <= Node.val <= 100`
+
+ 
+
+**进阶：**递归算法很简单，你可以通过迭代算法完成吗？
+
+
+
+---
+
+方法一：递归
+
+
+
+```
+    public List<Integer> preorderTraversal(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        preorderTraversal(root, result);
+        return result;
+    }
+
+    public void preorderTraversal(TreeNode root, List<Integer> list) {
+        if (root != null) {
+            list.add(root.val);
+            preorderTraversal(root.left, list);
+            preorderTraversal(root.right, list);
+        }
+    }
+```
+
+迭代：利用栈
+
+```
+
+    public List<Integer> preorderTraversal2(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        while (!stack.isEmpty()) {
+            TreeNode pop = stack.pop();
+            if (pop != null) {
+                result.add(pop.val);
+                stack.push(pop.right);
+                stack.push(pop.left);
+            }
+        }
+        return result;
+    }
+```
+
+方法三：
+
+
+
+## [102. 二叉树的层序遍历](/https://leetcode.cn/problems/binary-tree-level-order-traversal/?envType=study-plan-v2&envId=top-100-liked)
+
+中等
+
+给你二叉树的根节点 `root` ，返回其节点值的 **层序遍历** 。 （即逐层地，从左到右访问所有节点）。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/02/19/tree1.jpg)
+
+```
+输入：root = [3,9,20,null,null,15,7]
+输出：[[3],[9,20],[15,7]]
+```
+
+**示例 2：**
+
+```
+输入：root = [1]
+输出：[[1]]
+```
+
+**示例 3：**
+
+```
+输入：root = []
+输出：[]
+```
+
+ 
+
+**提示：**
+
+- 树中节点数目在范围 `[0, 2000]` 内
+- `-1000 <= Node.val <= 1000`
+
+---
+
+思路：用队列记录：遍历一个节点后将它的左右子节点放入队列中
+
+```
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> ans = new ArrayList<>();
+        if (root == null) {
+            return ans;
+        }
+        Deque<TreeNode> deque = new LinkedList<>();
+        deque.add(root);
+        while (!deque.isEmpty()) {
+            int size = deque.size();
+            List<Integer> list = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = deque.removeFirst();
+                if (node.left != null) {
+                    deque.add(node.left);
+                }
+                if (node.right != null) {
+                    deque.add(node.right);
+                }
+                list.add(node.val);
+            }
+            ans.add(list);
+        }
+        return ans;
+    }
+```
+
+
+
+
+
+
+
+
+
 
 
 
 # 回溯
+
+## [257. 二叉树的所有路径](/https://leetcode.cn/problems/binary-tree-paths/)
+
+简单
+
+给你一个二叉树的根节点 `root` ，按 **任意顺序** ，返回所有从根节点到叶子节点的路径。
+
+**叶子节点** 是指没有子节点的节点。
+
+ 
+
+**示例 1：**
+
+![img](https://assets.leetcode.com/uploads/2021/03/12/paths-tree.jpg)
+
+```
+输入：root = [1,2,3,null,5]
+输出：["1->2->5","1->3"]
+```
+
+**示例 2：**
+
+```
+输入：root = [1]
+输出：["1"]
+```
+
+ 
+
+**提示：**
+
+- 树中节点的数目在范围 `[1, 100]` 内
+- `-100 <= Node.val <= 100`
+
+
+
+---
+
+思路：无，查出所有的可能的情况，第一个回溯算法
+
+
+
+
+
+
 
 ## [46. 全排列](https://leetcode.cn/problems/permutations/)
 
@@ -1943,6 +2386,100 @@ todo 广度优先算法
 ------
 
 思路：
+
+
+
+初始[]
+
+第 1 个 元素 子集 [1]
+
+第 2个 元素 子集[2], [1,2]
+
+第 3个 元素 子集[3],[1,3],[2.3], [1,2,3]
+
+之后每一个元素在前一个元素子集的基础上加上当前的元素
+
+递归法
+
+```java
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        result.add(new ArrayList<>());
+        for (int num : nums) {
+            List<List<Integer>> subsetLists = new ArrayList<>();
+            for (List<Integer> subsetList : result) {
+                List<Integer> newSubList = new ArrayList<>(subsetList);
+                newSubList.add(num);
+                subsetLists.add(newSubList);
+            }
+            result.addAll(subsetLists);
+        }
+        return result;
+    }
+```
+
+执行用时：0 ms, 在所有 Java 提交中击败了100.00%的用户
+
+内存消耗：41.5 MB, 在所有 Java 提交中击败了5.29%的用户
+
+
+
+todo引用被更改,见testListList
+
+```java
+/**
+ * @param nums
+ * @return todo 错的 引用被更改,见testListList
+ */
+public static List<List<Integer>> subsets2(int[] nums) {
+
+    List<List<Integer>> result = new ArrayList<>();
+    result.add(new ArrayList<>());
+    for (int num : nums) {
+        List<List<Integer>> subsetLists = new ArrayList<>(result);
+        for (List<Integer> subsetList : subsetLists) {
+            subsetList.add(num);
+        }
+        result.addAll(subsetLists);
+    }
+    return result;
+}
+public static void  testListList(){
+
+    List<Integer> list1 = new ArrayList<>();
+    list1.add(1);
+    list1.add(2);
+    //1,2
+    System.out.println(list1);
+    List<Integer> list2 = new ArrayList<>(list1);
+    list2.add(3);
+    //1,2,3
+    System.out.println(list2);
+    //1,2 list1没有被更改
+    System.out.println(list1);
+    List<List<Integer>> lists1 = new ArrayList<>();
+    lists1.add(list1);
+    lists1.add(list2);
+    //[[1, 2], [1, 2, 3]]
+    System.out.println(lists1);
+    List<List<Integer>> lists2 = new ArrayList<>(lists1);
+    for (List<Integer> list : lists2) {
+        list.add(4);
+    }
+    //[[1, 2, 4], [1, 2, 3, 4]]
+    System.out.println(lists2);
+    //[[1, 2, 4], [1, 2, 3, 4]] lists1被更改？？
+    System.out.println(lists1);
+}
+```
+
+
+
+
+
+
+
+
 
 
 
@@ -2067,56 +2604,284 @@ todo 广度优先算法
 
 难度中等
 
-设计一个支持 `push` ，`pop` ，`top` 操作，并能在常数时间内检索到最小元素的栈。
+- 设计一个支持 `push` ，`pop` ，`top` 操作，并能在常数时间内检索到最小元素的栈。
 
-实现 `MinStack` 类:
+  实现 `MinStack` 类:
 
-- `MinStack()` 初始化堆栈对象。
-- `void push(int val)` 将元素val推入堆栈。
-- `void pop()` 删除堆栈顶部的元素。
-- `int top()` 获取堆栈顶部的元素。
-- `int getMin()` 获取堆栈中的最小元素。
+  - `MinStack()` 初始化堆栈对象。
+  - `void push(int val)` 将元素val推入堆栈。
+  - `void pop()` 删除堆栈顶部的元素。
+  - `int top()` 获取堆栈顶部的元素。
+  - `int getMin()` 获取堆栈中的最小元素。
+
+   
+
+  **示例 1:**
+
+  ```
+  输入：
+  ["MinStack","push","push","push","getMin","pop","top","getMin"]
+  [[],[-2],[0],[-3],[],[],[],[]]
+  
+  输出：
+  [null,null,null,null,-3,null,0,-2]
+  
+  解释：
+  MinStack minStack = new MinStack();
+  minStack.push(-2);
+  minStack.push(0);
+  minStack.push(-3);
+  minStack.getMin();   --> 返回 -3.
+  minStack.pop();
+  minStack.top();      --> 返回 0.
+  minStack.getMin();   --> 返回 -2.
+  ```
+
+   
+
+  **提示：**
+
+  - `-231 <= val <= 231 - 1`
+  - `pop`、`top` 和 `getMin` 操作总是在 **非空栈** 上调用
+  - `push`, `pop`, `top`, and `getMin`最多被调用 `3 * 104` 次
+
+------
+
+思路：
+
+Java中自带的Stack类，如何自己设计实现？
+
+Stack有哪些常用的子类？
+
+自带的能实现上面的方法，怎么实现最后一个？
+
+要在常数时间内检索到，则必定每添加或者弹出一个元素都要对应的最小元素
+
+https://blog.csdn.net/AsheAndWine/article/details/74036652
+
+看题解有两种，一种是每次弹出两个元素，其中一个是最小值，另一种是辅助栈，即用另一个栈来存储最小值
+
+执行用时：7 ms, 在所有 Java 提交中击败了79.21%的用户
+
+内存消耗：40.3 MB, 在所有 Java 提交中击败了32.65%的用户
+
+```java
+public class MinStack {
+    
+    private int[] objects = new int[10];
+    private int elementSize = 0;
+
+    public MinStack() {
+    }
+
+    public void push(int x) {
+        int minCapacity = elementSize + 2;
+        if (objects.length < minCapacity) {
+            int newLength = objects.length + objects.length;
+            if (newLength < minCapacity) {
+                newLength = minCapacity;
+            }
+            objects = Arrays.copyOf(objects, newLength);
+        }
+        int min = elementSize - 1 > 0 ? Math.min(objects[elementSize - 1], x) : x;
+        objects[elementSize++] = x;
+        objects[elementSize++] = min;
+    }
+
+    public void pop() {
+        objects[elementSize-- - 1] = 0;
+        objects[elementSize-- - 1] = 0;
+    }
+
+    public int top() {
+        return objects[elementSize - 2];
+    }
+
+    public int getMin() {
+        return objects[elementSize - 1];
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+## [394. 字符串解码](/https://leetcode.cn/problems/decode-string/?envType=study-plan-v2&envId=top-100-liked)
+
+中等
+
+给定一个经过编码的字符串，返回它解码后的字符串。
+
+编码规则为: `k[encoded_string]`，表示其中方括号内部的 `encoded_string` 正好重复 `k` 次。注意 `k` 保证为正整数。
+
+你可以认为输入字符串总是有效的；输入字符串中没有额外的空格，且输入的方括号总是符合格式要求的。
+
+此外，你可以认为原始数据不包含数字，所有的数字只表示重复的次数 `k` ，例如不会出现像 `3a` 或 `2[4]` 的输入。
 
  
 
-**示例 1:**
+**示例 1：**
 
 ```
-输入：
-["MinStack","push","push","push","getMin","pop","top","getMin"]
-[[],[-2],[0],[-3],[],[],[],[]]
+输入：s = "3[a]2[bc]"
+输出："aaabcbc"
+```
 
-输出：
-[null,null,null,null,-3,null,0,-2]
+**示例 2：**
 
-解释：
-MinStack minStack = new MinStack();
-minStack.push(-2);
-minStack.push(0);
-minStack.push(-3);
-minStack.getMin();   --> 返回 -3.
-minStack.pop();
-minStack.top();      --> 返回 0.
-minStack.getMin();   --> 返回 -2.
+```
+输入：s = "3[a2[c]]"
+输出："accaccacc"
+```
+
+**示例 3：**
+
+```
+输入：s = "2[abc]3[cd]ef"
+输出："abcabccdcdcdef"
+```
+
+**示例 4：**
+
+```
+输入：s = "abc3[cd]xyz"
+输出："abccdcdcdxyz"
 ```
 
  
 
 **提示：**
 
-- `-231 <= val <= 231 - 1`
-- `pop`、`top` 和 `getMin` 操作总是在 **非空栈** 上调用
-- `push`, `pop`, `top`, and `getMin`最多被调用 `3 * 104` 次
+- `1 <= s.length <= 30`
+- `s` 由小写英文字母、数字和方括号 `'[]'` 组成
+- `s` 保证是一个 **有效** 的输入。
+- `s` 中所有整数的取值范围为 `[1, 300]` 
 
-------
+---
+
+思路：无
 
 
+
+## [739. 每日温度](/https://leetcode.cn/problems/daily-temperatures/?envType=study-plan-v2&envId=top-100-liked)
+
+中等
+
+给定一个整数数组 `temperatures` ，表示每天的温度，返回一个数组 `answer` ，其中 `answer[i]` 是指对于第 `i` 天，下一个更高温度出现在几天后。如果气温在这之后都不会升高，请在该位置用 `0` 来代替。
+
+ 
+
+**示例 1:**
+
+```
+输入: temperatures = [73,74,75,71,69,72,76,73]
+输出: [1,1,4,2,1,1,0,0]
+```
+
+**示例 2:**
+
+```
+输入: temperatures = [30,40,50,60]
+输出: [1,1,1,0]
+```
+
+**示例 3:**
+
+```
+输入: temperatures = [30,60,90]
+输出: [1,1,0]
+```
+
+ 
+
+**提示：**
+
+- `1 <= temperatures.length <= 105`
+- `30 <= temperatures[i] <= 100`
+
+
+
+---
+
+思路：暴力n*n
+
+思路：看题解：栈，递减栈
+
+> Deque<Integer> stack = new LinkedList<Integer>();
+>
+> Stack<Integer> stack = new Stack<>();
+
+TODO 
+
+```
+    /**
+     * @param temperatures
+     * @return 739. 每日温度
+     */
+    public int[] dailyTemperatures(int[] temperatures) {
+        int length = temperatures.length;
+        int[] result = new int[length];
+        //Deque<Integer> stack = new LinkedList<Integer>();
+        //这个比下面的快很多
+        Stack<Integer> stack = new Stack<>();
+        for (int i = 0; i < length; i++) {
+            while (!stack.isEmpty() && temperatures[stack.peek()] < temperatures[i]) {
+                Integer pop = stack.pop();
+                result[pop] = i - pop;
+            }
+            stack.push(i);
+        }
+        return result;
+    }
+```
 
 
 
 
 
 # 堆
+
+## [215. 数组中的第K个最大元素](/https://leetcode.cn/problems/kth-largest-element-in-an-array/?envType=study-plan-v2&envId=top-100-liked)
+
+中等
+
+给定整数数组 `nums` 和整数 `k`，请返回数组中第 `**k**` 个最大的元素。
+
+请注意，你需要找的是数组排序后的第 `k` 个最大的元素，而不是第 `k` 个不同的元素。
+
+你必须设计并实现时间复杂度为 `O(n)` 的算法解决此问题。
+
+ 
+
+**示例 1:**
+
+```
+输入: [3,2,1,5,6,4], k = 2
+输出: 5
+```
+
+**示例 2:**
+
+```
+输入: [3,2,3,1,2,4,5,5,6], k = 4
+输出: 4
+```
+
+ 
+
+**提示：**
+
+- `1 <= k <= nums.length <= 105`
+- `-104 <= nums[i] <= 104`
+
+---
+
+思路：排序但是时间复杂度没有O(n)的
 
 
 
