@@ -271,6 +271,7 @@ Resolving deltas: 100% (1/1), done.
 #### 创建和合并分支
     流程图可看原教程，总结如下
 `git branch` 查看分支  
+git branch -a 查看本地和远程所有分支
 `git branch dev` 创建分支  
 `git checkout dev` 切换分支  
 `git checkout -b dev` 创建并切换到分支dev  
