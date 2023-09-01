@@ -7,8 +7,10 @@ categories: 开发工具
 ---
 
 ## Git简介
+
 ### windows安装git
-从Git官网[下载安装程序](https://git-scm.com/downloads),默认安装后启动git bash，设置如下参数  
+
+从Git官网[下载安装程序](https://git-scm.com/downloads),默认安装后启动`git bash`，设置如下参数  
 >     git config --global user.name "jx*"
 >     git config --global user.email "578***@qq.com"
 
@@ -17,23 +19,29 @@ https://www.cnblogs.com/specter45/p/github.html
 ---
 
 ### 创建版本库 Repository
->     cd f: //进入f盘
->     mkdir git-demo //创建git-demo目录 cd git-demo
->     git init //初始化一个Git仓库：将git -demo用git管理
->     ls -ah //查看隐藏的.git文件
->     手动创建一个readme.txt文件
->     git add readme.txt  //添加到git仓库
->     git commit -m "提交readme.txt" //提交到git仓库
+>     //进入f盘 
+>     cd f:
+>     
+>     //创建git-demo目录 
+>     mkdir git-demo 
+>     cd git-demo
+>     
+>     //初始化一个Git仓库：将git -demo用git管理
+>     git init 
+>     
+>     //查看隐藏的.git文件
+>     ls -ah 
+>     
+>     //手动创建一个readme.txt文件
+>     //添加到git仓库
+>     git add readme.txt  
+>     
+>     //提交到git仓库
+>     git commit -m "提交readme.txt" 
 
 ---
 
 ## 时光机穿梭
-
-```
-$ git status //查看git仓库当前状态
-On branch master
-nothing to commit, working tree clean
-```
 
 
 >  `git status`查看git当前状态 
