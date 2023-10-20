@@ -6,7 +6,7 @@ description:
 categories:
 ---
 
-日志使用:门面+框架
+## 日志使用:门面+框架
 
 门面：
 
@@ -14,7 +14,7 @@ categories:
 
 ~~jboss-logging~~：只用在一些特定框架
 
-SLF4J(Simple Logging Facade for Java):
+SLF4J(Simple Logging Facade for Java):选择
 
 框架：
 
@@ -26,7 +26,7 @@ Logback：log4j作者的另一个日志框架，同时也是slf4j的作者
 
 Log4j2:Apache的项目，对log4j的升级，同时借鉴了logback的优点，虽然先进但未普及
 
-选择：slf4j+logback
+### 日志选择：slf4j+logback
 
 SpringBoot中的日志框架：spring默认使用JCL
 
@@ -34,18 +34,18 @@ SpringBoot选择的也是slf4j+logback
 
 slf4j和各类日志实现的使用
 
-图片
+![1](https://www.slf4j.org/images/concrete-bindings.png)
 
 slf4j和多个日志实现的使用
-图片
+![](https://www.slf4j.org/images/legacy.png)
 
-排出掉其它日志
+* 排除掉其它日志
 
-引入中间包
+* 引入中间包
 
-引入需要用的日志实现（中间包实际调用这个日志实现）
+* 引入需要用的日志实现（中间包实际调用这个日志实现）
 
-1.5.9版本的SpringBoot引用的Spring-core中排除了commons-logging
+比如：1.5.9版本的SpringBoot引用的Spring-core中排除了commons-logging
 
 ```xml
         <dependency>
@@ -60,7 +60,7 @@ slf4j和多个日志实现的使用
         </dependency>
 ```
 
-SB2.0后使用的Spring5里使用了
+2.0后使用的Spring5里直接整合了commons-logging使用了jcl
 
 ```xml
     <dependency>
@@ -71,24 +71,191 @@ SB2.0后使用的Spring5里使用了
     </dependency>
 ```
 
-
-
 ![日志](./SpringBoot3/SpringBoot日志.png)
 
-使用：
+### 日志配置：
 
-> Logger logger = LoggerFactory.getLogger(Boot3LoggingApplication.class);
-> 
-> logger.trace("trace");  
-> //但是在main方法里会打印debug日志  
-> logger.debug("debug");  
-> //SB默认打印info及以上级别的日志  
-> logger.info("info");  
-> logger.warn("warn");  
-> logger.error("error");
+指定配置文件：
 
-> logging.file:指定全路径日志文件名
-> 
-> logging.path:指定路径 默认spring.log
-> 
-> logging.level.包名：指定level，没指定默认root
+| Logging System          | Customization                                                                     |
+| ----------------------- | --------------------------------------------------------------------------------- |
+| Logback                 | `logback-spring.xml`, `logback-spring.groovy`, `logback.xml`, or `logback.groovy` |
+| Log4j2                  | `log4j2-spring.xml` or `log4j2.xml`                                               |
+| JDK (Java Util Logging) | `logging.properties`                                                              |
+
+推荐使用带-spring后缀的配置文件：因为会被springboot框架识别，使用spring特有的属性：比如
+
+```xml
+<springProfile name="dev | staging">
+    <!-- configuration to be enabled when the "dev" or "staging" profiles are active -->
+</springProfile>
+```
+
+### 自动配置原理
+
+1. 每个场景starter（启动器）都会引入核心启动器：`spring-boot-starter`
+
+2. 核心starter里引入了日志启动器`spring-boot-starter-logging`
+
+3. 默认使用了`slf4j+logback`
+
+4. 因为日志是启动时就要用到的，而`xxxaAutoConfiguration`是系统启动好了以后放进去的组件，是后来用的
+
+5. 日志是通过监听器机制启动的。ApplicationListener。
+
+6. 日志的配置都是通过logging开头的配置文件修改。
+
+### 日志格式
+
+```tex
+2023-10-18T14:32:44.780+08:00  INFO 7012 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 752 ms
+2023-10-18T14:32:45.046+08:00  INFO 7012 --- [           main] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port(s): 8080 (http) with context path ''
+```
+
+默认输出格式：
+
+- 时间和日期：毫秒级精度
+- 日志级别：ERROR, WARN, INFO, DEBUG, or TRACE.
+- 进程 ID,使用java命令jps查看
+- ---： 消息分割符
+- 线程名： 使用[]包含
+- Logger 名： 通常是产生日志的**类名**
+- 消息： 日志记录的内容
+
+注意： logback 没有FATAL级别，对应的是ERROR
+
+默认值：参照：`spring-boot`包`additional-spring-configuration-metadata.json`文件中`logging.pattern.console`参数
+
+单独修改日期格式：`logging.pattern.dateformat`
+
+### 日志级别
+
+由低到高：`ALL,TRACE, DEBUG, INFO, WARN, ERROR,FATAL,OFF`；
+
+- **只会打印指定级别及以上级别的日志**
+
+- ALL：打印所有日志
+
+- TRACE：追踪框架详细流程日志，一般不使用
+
+- DEBUG：开发调试细节日志
+
+- INFO：关键、感兴趣信息日志
+
+- WARN：警告但不是错误的信息日志，比如：版本过时
+
+- ERROR：业务错误日志，比如出现各种异常
+
+- FATAL：致命错误日志，比如jvm系统崩溃
+
+- OFF：关闭所有日志记录
+
+- 不指定级别的所有类，都使用root指定的级别作为默认级别
+
+- SpringBoot日志**默认级别是** **INFO**
+
+在application.properties/yaml中配置logging.level.<logger-name>=<level>指定日志级别
+
+```java
+@Slf4j
+@RestController
+public class HelloController {
+    @RequestMapping("/hello")
+    public void hello(String a,String b){
+        log.trace("trace");
+        //但是在main方法里会打印debug日志
+        log.debug("debug");
+        //SB默认打印info及以上级别的日志
+        log.info("info,a={},b={}",a,b);
+        log.warn("warn");
+        log.error("error");
+    }
+}
+```
+
+### 日志分组
+
+logging.group.组名=[类名/包名],[类名/包名]...
+
+logging.level.组名=info
+
+springboot默认提供了两个组名，sql和web，必须要调试sql语句相关时，可以
+
+`logging.level.sql=debug`
+
+| Name | Loggers                                                                                                                                                                                               |
+|:---- |:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| web  | org.springframework.core.codec, org.springframework.http, org.springframework.web, org.springframework.boot.actuate.endpoint.web, org.springframework.boot.web.servlet.ServletContextInitializerBeans |
+| sql  | org.springframework.jdbc.core, org.hibernate.SQL, org.jooq.tools.LoggerListener                                                                                                                       |
+
+### 写入文件
+
+SpringBoot 默认只把日志写在控制台，如果想额外记录到文件，可以在`application.properties`中添加`logging.file.name` or` logging.file.path`配置项。
+
+| logging.file.name | logging.file.path | 示例       | 效果                    |
+|:----------------- |:----------------- |:-------- |:--------------------- |
+| 未指定               | 未指定               |          | 仅控制台输出                |
+| **指定**            | 未指定               | my.log   | 写入指定文件。可以加路径          |
+| 未指定               | **指定**            | /var/log | 写入指定目录，文件名为spring.log |
+| **指定**            | **指定**            |          | 以logging.file.name为准  |
+
+### 日志归档和滚动切割
+
+> 归档：每天的日志单独存到一个文档中。
+> 切割：每个文件10MB，超过大小切割成另外一个文件。
+
+1. 每天的日志应该独立分割出来存档。如果使用logback（SpringBoot 默认整合），可以通过application.properties/yaml文件指定日志滚动规则。
+2. 如果是其他日志系统，需要自行配置（添加log4j2.xml或log4j2-spring.xml）
+3. 支持的滚动规则设置如下
+
+| 配置项                                                  | 描述                                                        |
+|:----------------------------------------------------:|:--------------------------------------------------------- |
+| logging.logback.rollingpolicy.file-name-pattern      | 日志存档的文件名格式（默认值：${LOG_FILE}.%d{yyyy-MM-dd}.%i.gz）          |
+| logging.logback.rollingpolicy.clean-history-on-start | 应用启动时是否清除以前存档（默认值：false）                                  |
+| logging.logback.rollingpolicy.max-file-size          | 存档前，每个日志文件的最大大小（默认值：10MB）                                 |
+| logging.logback.rollingpolicy.total-size-cap         | 日志文件被删除之前，可以容纳的最大大小（默认值：0B）。设置1GB则磁盘存储超过 1GB 日志后就会删除旧日志文件 |
+| logging.logback.rollingpolicy.max-history            | 日志文件保存的最大天数(默认值：7).                                       |
+
+
+
+
+
+### 切换日志
+
+切换为log4j2
+
+排除掉SpringBoot自带的日志：
+
+引入log4j2依赖：
+
+```xml
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+        </dependency>
+```
+
+log4j2支持yaml和json格式的配置文件
+
+| 格式   | 依赖                                                                                                     | 文件名                      |
+| ---- | ------------------------------------------------------------------------------------------------------ | ------------------------ |
+| YAML | com.fasterxml.jackson.core:jackson-databind + com.fasterxml.jackson.dataformat:jackson-dataformat-yaml | log4j2.yaml + log4j2.yml |
+| JSON | com.fasterxml.jackson.core:jackson-databind                                                            | log4j2.json + log4j2.jsn |
+
+### 最佳实战
+
+1. 导入任何第三方框架，先排除它的日志包，因为Boot底层控制好了日志
+2. 修改 `application.properties` 配置文件，就可以调整日志的所有行为。如果不够，可以编写日志框架自己的配置文件放在类路径下就行，比如`logback-spring.xml`，`log4j2-spring.xml`
+3. 如需对接**专业日志系统**，也只需要把 logback 记录的**日志**灌倒 **kafka**之类的中间件，这和SpringBoot没关系，都是日志框架自己的配置，**修改配置文件即可**
+   
+   
