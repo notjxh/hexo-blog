@@ -10,6 +10,16 @@ categories: Hexo
 如何在hexo插入图片
 
 ## 解决
+更新：[参考](https://hexo.io/zh-cn/docs/asset-folders#%E4%BD%BF%E7%94%A8-Markdown-%E5%B5%8C%E5%85%A5%E5%9B%BE%E7%89%87)
+```yaml
+post_asset_folder: true
+marked:
+  prependRoot: true
+  postAsset: true
+```
+
+---
+以下废弃
 
 ### 修改配置 _config.yml
 > post_asset_folder: true
